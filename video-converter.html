@@ -23,7 +23,7 @@ ul li { margin-bottom:4px; }
 
 <div class="card">
   <h1>🎬 MP4 → WebM / AVI / GIF</h1>
-  <p>Конвертуйте відео прямо в браузері. Працює на GitHub Pages.</p>
+  <p>Конвертуйте відео прямо в браузері на GitHub Pages.</p>
 
   <input id="videoInput" type="file" accept="video/*" multiple>
   <label for="videoInput" id="fileLabel">📂 Оберіть відео</label>
@@ -65,10 +65,10 @@ ul li { margin-bottom:4px; }
 <script>
 const { createFFmpeg, fetchFile } = FFmpeg;
 
-// corePath можна залишити на CDN, бо GitHub Pages підтримує HTTP/HTTPS
+// Використовуємо локальний файл на GitHub Pages
 const ffmpeg = createFFmpeg({
   log: true,
-  corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js'
+  corePath: 'ffmpeg-core.js' // обов'язково у тій же папці, що й index.html
 });
 
 const input = document.getElementById('videoInput');
