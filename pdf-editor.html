@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Редактор PDF та зображень</title>
+<style>
+body {font-family:"Segoe UI",sans-serif;margin:0;padding:0;background:#0f172a;color:#e6eef8;display:flex;flex-direction:column;align-items:center;}
+body.light {background:#f9fafb;color:#111827;}
+header{text-align:center;padding:40px 20px;}
+h1{margin:0 0 6px;}
+p.lead{margin:0;opacity:0.85;}
+.controls{display:flex;gap:10px;margin:10px;flex-wrap:wrap;justify-content:center;}
+input[type=file]{display:none;}
+.btn{padding:10px 16px;border:none;border-radius:12px;cursor:pointer;font-weight:600;background:#2563eb;color:white;box-shadow:0 4px 10px rgba(0,0,0,0.3);transition:0.2s;}
+.btn:hover{background:#1e40af;transform:translateY(-2px);}
+.btn:active{background:#1b36a1;transform:translateY(1px);box-shadow:0 2px 6px rgba(0,0,0,0.4);}
+.btn:disabled{opacity:0.5;cursor:not-allowed;background:#2563eb;transform:none;box-shadow:none;}
+#dropZone{border:2px dashed #64748b;padding:30px;border-radius:10px;text-align:center;margin:10px;width:90%;max-width:500px;transition:0.2s;}
+#dropZone.dragover{background:#e0f2fe;border-color:#2563eb;color:#2563eb;}
+#pagesContainer{display:flex;flex-wrap:wrap;gap:12px;justify-content:center;padding:10px;}
+.thumbnail{position:relative;width:200px;background:#0b1220;border-radius:10px;overflow:hidden;cursor:pointer;}
+body.light .thumbnail{background:#fff;}
+.thumb-canvas{width:100%;height:auto;display:block;}
+.delete-btn{position:absolute;top:5px;right:5px;background:red;color:white;border:none;border-radius:50%;cursor:pointer;}
+.save-one-btn{position:absolute;top:30px;right:5px;background:#10b981;color:white;border:none;border-radius:50%;cursor:pointer;}
+.theme-toggle{margin:20px;cursor:pointer;padding:8px 12px;border-radius:12px;background:#2563eb;color:white;}
+.theme-toggle:hover{background:#1e40af;}
+#modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);align-items:center;justify-content:center;z-index:1000;overflow:auto;}
+#modal img{max-width:90%;max-height:90%;border-radius:12px;box-shadow:0 4px 20px rgba(0,0,0,0.5);cursor:zoom-in;transition:transform 0.3s;}
+#modal img.zoomed{transform:scale(2); cursor:zoom-out;}
+</style>
+</head>
+<body>
+<header>
+<h1>📄 Редактор PDF та зображень</h1>
+<p class="lead">Перетягайте сторінки, редагуйте та зберігайте</p>
+</header>
+
+<div class="controls">
+  <label class="btn" for="fileInput">📁 Обрати файли</label>
+  <input type="file" id="fileInput" multiple accept="application/pdf,image/*">
+  <button id="savePdfBtn" class="btn" disabled>💾 Зберегти у PDF</button>
+  <button id="saveImgsBtn" class="btn" disabled>🖼 Зберегти всі JPG</button>
+</div>
+
+<div id="dropZone">📥 Перетягніть PDF або зображення сюди</div>
+<div id="pagesContainer"></div>
+<div class="theme-toggle" onclick="toggleTheme()">🌓 Змінити тему</div>
+
+<div id="modal"><img id="modalImg" src=""></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script>
+const pagesContainer=document.getElementById('pagesContainer');
+const fileInput=document.getElementById('fileInput');
+const savePdfBtn=document.getElementById('savePdfBtn');
+const saveImgsBtn=document.getElementById('saveImgsBtn');
+const dropZone=document.getElementById('dropZone');
+const modal=document.getElementById('modal');
+const modalImg=document.getElementById('modalImg');
+
+let pages=[];
+pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+function updateButtons(){savePdfBtn.disabled=saveImgsBtn.disabled=pages.length===0;}
+
+function renderThumbnails(){
+  pagesContainer.innerHTML='';
+  pages.forEach((p,i)=>{
+    const thumb=document.createElement('div'); thumb.className='thumbnail';
+    thumb.setAttribute('draggable','true');
+
+    const canvas=document.createElement('canvas'); canvas.className='thumb-canvas';
+    canvas.width=Math.min(200,p.canvas.width);
+    canvas.height=canvas.width*p.canvas.height/p.canvas.width;
+    canvas.getContext('2d').drawImage(p.canvas,0,0,canvas.width,canvas.height);
+    thumb.appendChild(canvas);
+
+    thumb.onclick=()=>{modalImg.src=p.canvas.toDataURL('image/jpeg',1.0); modal.style.display='flex'; modalImg.classList.remove('zoomed');};
+
+    const del=document.createElement('button'); del.className='delete-btn'; del.textContent='×';
+    del.onclick=()=>{pages.splice(i,1); renderThumbnails(); updateButtons();}
+    thumb.appendChild(del);
+
+    const saveOne=document.createElement('button'); saveOne.className='save-one-btn'; saveOne.textContent='💾';
+    saveOne.onclick=async (e)=>{
+      e.stopPropagation();
+      if(window.showSaveFilePicker){
+        try{
+          const handle=await window.showSaveFilePicker({suggestedName:p.filename.replace(/\.[^/.]+$/,".jpg"), types:[{description:'JPG', accept:{'image/jpeg':['.jpg']}}]});
+          const writable=await handle.createWritable();
+          const blob=await new Promise(r=>p.canvas.toBlob(r,'image/jpeg',1.0));
+          await writable.write(blob); await writable.close();
+        }catch(err){console.log('Скасовано',err);}
+      } else {
+        const a=document.createElement('a');
+        const blob=await new Promise(r=>p.canvas.toBlob(r,'image/jpeg',1.0));
+        a.href=URL.createObjectURL(blob); a.download=p.filename.replace(/\.[^/.]+$/,".jpg"); a.click();
+        URL.revokeObjectURL(a.href);
+      }
+    };
+    thumb.appendChild(saveOne);
+
+    thumb.addEventListener('dragstart',(e)=>{e.dataTransfer.setData('text/plain',i);});
+    thumb.addEventListener('dragover',(e)=>{e.preventDefault();});
+    thumb.addEventListener('drop',(e)=>{
+      e.preventDefault();
+      const fromIndex=parseInt(e.dataTransfer.getData('text/plain'));
+      const toIndex=i;
+      const moved=pages.splice(fromIndex,1)[0];
+      pages.splice(toIndex,0,moved);
+      renderThumbnails();
+    });
+
+    pagesContainer.appendChild(thumb);
+  });
+}
+
+modalImg.onclick=(e)=>{e.stopPropagation(); modalImg.classList.toggle('zoomed');};
+modal.onclick=()=>{modal.style.display='none';};
+
+async function handleFiles(files){
+  for(const file of files){
+    if(file.type==='application/pdf'){
+      const arrayBuffer=await file.arrayBuffer();
+      const pdf=await pdfjsLib.getDocument({data:arrayBuffer}).promise;
+      for(let i=1;i<=pdf.numPages;i++){
+        const page=await pdf.getPage(i);
+        const viewport=page.getViewport({scale:1.5});
+        const canvas=document.createElement('canvas');
+        canvas.width=viewport.width; canvas.height=viewport.height;
+        await page.render({canvasContext:canvas.getContext('2d'), viewport}).promise;
+        pages.push({canvas, filename:`${file.name.replace(/\.pdf$/i,'')}_p${i}.jpg`});
+      }
+    } else if(file.type.startsWith('image/')){
+      const dataUrl=await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(file);});
+      const img=new Image(); await new Promise(r=>{img.onload=r; img.src=dataUrl;});
+      const canvas=document.createElement('canvas'); canvas.width=img.width; canvas.height=img.height;
+      canvas.getContext('2d').drawImage(img,0,0);
+      pages.push({canvas, filename:file.name.replace(/\.[^/.]+$/,".jpg")});
+    }
+  }
+  renderThumbnails(); updateButtons();
+}
+
+fileInput.addEventListener('change', async ()=>{await handleFiles(Array.from(fileInput.files)); fileInput.value='';});
+dropZone.addEventListener('dragover', e=>{e.preventDefault(); dropZone.classList.add('dragover');});
+dropZone.addEventListener('dragleave', e=>{dropZone.classList.remove('dragover');});
+dropZone.addEventListener('drop', async e=>{e.preventDefault(); dropZone.classList.remove('dragover'); await handleFiles(Array.from(e.dataTransfer.files));});
+
+// Збереження PDF
+savePdfBtn.addEventListener('click', async ()=>{
+  const { jsPDF } = window.jspdf; const pdf=new jsPDF({unit:'pt', format:'a4'});
+  const pageW=pdf.internal.pageSize.getWidth(), pageH=pdf.internal.pageSize.getHeight();
+  for(let i=0;i<pages.length;i++){
+    const p=pages[i];
+    const imgData=p.canvas.toDataURL('image/jpeg',1.0);
+    if(i>0) pdf.addPage();
+    let w=pageW, h=p.canvas.height*p.canvas.width!==0? pageW*p.canvas.height/p.canvas.width : pageH;
+    if(h>pageH){h=pageH; w=p.canvas.width*p.canvas.height!==0? pageH*p.canvas.width/p.canvas.height: pageW;}
+    pdf.addImage(imgData,'JPEG',0,0,w,h);
+  }
+
+  if(window.showSaveFilePicker){
+    try{
+      const handle=await window.showSaveFilePicker({suggestedName:"збережений.pdf", types:[{description:'PDF', accept:{'application/pdf':['.pdf']}}]});
+      const writable=await handle.createWritable();
+      await writable.write(await pdf.output('arraybuffer')); await writable.close();
+    }catch(err){console.log('Скасовано або помилка',err);}
+  } else {pdf.save("збережений.pdf");}
+});
+
+// Збереження всіх JPG
+saveImgsBtn.addEventListener('click', async ()=>{
+  if(window.showDirectoryPicker){
+    try{
+      const dirHandle=await window.showDirectoryPicker();
+      for(const p of pages){
+        const blob=await new Promise(r=>p.canvas.toBlob(r,'image/jpeg',1.0));
+        const fileHandle=await dirHandle.getFileHandle(p.filename,{create:true});
+        const writable=await fileHandle.createWritable();
+        await writable.write(blob); await writable.close();
+      }
+      alert("Зображення збережені у вибраній папці");
+    }catch(err){console.log('Скасовано або помилка',err);}
+  } else {
+    for(const p of pages){
+      const blob=await new Promise(r=>p.canvas.toBlob(r,'image/jpeg',1.0));
+      const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=p.filename; a.click(); URL.revokeObjectURL(a.href);
+    }
+  }
+});
+
+function toggleTheme(){document.body.classList.toggle('light');}
+</script>
+</body>
+</html>
