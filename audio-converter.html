@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Онлайн Конвертер Аудіо (MP3 → WAV / OGG / FLAC)</title>
+  <meta name="description" content="Перетворюйте MP3 у WAV, OGG або FLAC онлайн прямо у браузері. Безкоштовно і без реклами.">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+    }
+    body.light { background: #f9fafb; color: #111827; }
+
+    header {
+      text-align: center;
+      padding: 50px 20px 20px;
+      position: relative;
+    }
+    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    header p { opacity: 0.8; }
+
+    .wave { position: absolute; top: 0; left: 0; width: 100%; z-index: -1; }
+    .wave svg { display: block; width: 100%; height: auto; }
+
+    .card {
+      background: #1e293b;
+      padding: 32px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
+    }
+    body.light .card { background: #ffffff; }
+
+    input[type="file"] { display: none; }
+    label {
+      display: inline-block;
+      padding: 12px 20px;
+      background: #334155;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px 0;
+      color: white;
+    }
+    body.light label { background: #e5e7eb; color: #111827; }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover { background: #1e40af; }
+    button:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    select {
+      margin-top: 10px;
+      padding: 8px 12px;
+      border-radius: 10px;
+      border: 1px solid #d1d5db;
+    }
+
+    #status { margin-top: 12px; font-size: 0.9rem; }
+
+    .nav {
+      margin: 30px 0;
+      text-align: center;
+    }
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wave">
+      <svg viewBox="0 0 1440 320"><path fill="#2563eb" fill-opacity="0.6" d="M0,64L48,85.3C96,107,192,149,288,176C384,203,480,213,576,197.3C672,181,768,139,864,138.7C960,139,1056,181,1152,208C1248,235,1344,245,1392,250.7L1440,256V0H0Z"></path></svg>
+    </div>
+    <h1>🎤 Конвертер аудіо</h1>
+    <p>Перетворіть MP3 у WAV, OGG або FLAC прямо у браузері</p>
+  </header>
+
+  <div class="card">
+    <input id="audioInput" type="file" accept="audio/*">
+    <label for="audioInput">📂 Оберіть аудіофайл</label>
+
+    <div>
+      <label for="format">Формат:</label><br>
+      <select id="format">
+        <option value="wav">WAV</option>
+        <option value="ogg">OGG</option>
+        <option value="flac">FLAC</option>
+      </select>
+    </div>
+
+    <button id="convertBtn" disabled>Завантаження ffmpeg...</button>
+    <div id="status">Очікування файлу...</div>
+  </div>
+
+  <div class="nav">
+    <a href="index.html">⬅ Повернутись на головну</a>
+  </div>
+
+  <!-- FFmpeg -->
+  <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
+  <script>
+    const { createFFmpeg, fetchFile } = FFmpeg;
+    const ffmpeg = createFFmpeg({
+      log: false,
+      corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js'
+    });
+
+    const input = document.getElementById('audioInput');
+    const btn = document.getElementById('convertBtn');
+    const status = document.getElementById('status');
+    const formatSelect = document.getElementById('format');
+    let file = null;
+
+    async function loadFFmpeg() {
+      status.innerText = 'Завантаження ffmpeg...';
+      await ffmpeg.load();
+      btn.disabled = false;
+      btn.innerText = 'Конвертувати';
+      status.innerText = 'Готово ✅';
+    }
+    loadFFmpeg();
+
+    input.addEventListener('change', () => {
+      file = input.files[0];
+      if (file) {
+        status.innerText = `Обрано файл: ${file.name}`;
+      }
+    });
+
+    btn.addEventListener('click', async () => {
+      if (!file) return alert('Оберіть аудіофайл!');
+      btn.disabled = true;
+
+      const format = formatSelect.value;
+      const outputName = `output.${format}`;
+      status.innerText = `Конвертація у ${format.toUpperCase()}...`;
+
+      ffmpeg.FS('writeFile', 'input.mp3', await fetchFile(file));
+      await ffmpeg.run('-i', 'input.mp3', outputName);
+
+      const data = ffmpeg.FS('readFile', outputName);
+      const url = URL.createObjectURL(new Blob([data.buffer], { type: `audio/${format}` }));
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = file.name.replace(/\.[^/.]+$/, "") + "." + format;
+      a.click();
+
+      status.innerText = 'Файл готовий ✅';
+      btn.disabled = false;
+    });
+  </script>
+</body>
+</html>

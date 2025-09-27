@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PDF → JPG Онлайн Конвертер</title>
+  <meta name="description" content="Перетворіть PDF у JPG онлайн безкоштовно прямо у браузері.">
+  <style>
+    body {
+      margin: 0;
+      font-family: "Segoe UI", sans-serif;
+      background: #0f172a;
+      color: #f1f5f9;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      transition: background 0.3s, color 0.3s;
+    }
+    body.light { background: #f9fafb; color: #111827; }
+
+    header {
+      text-align: center;
+      padding: 50px 20px 20px;
+      position: relative;
+    }
+    header h1 { font-size: 2.2rem; margin-bottom: 8px; }
+    header p { opacity: 0.8; }
+
+    .wave { position: absolute; top: 0; left: 0; width: 100%; z-index: -1; }
+    .wave svg { display: block; width: 100%; height: auto; }
+
+    .card {
+      background: #1e293b;
+      padding: 32px;
+      border-radius: 14px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+      max-width: 600px;
+      width: 100%;
+      text-align: center;
+      margin-top: 20px;
+    }
+    body.light .card { background: #ffffff; }
+
+    input[type="file"] { display: none; }
+    label {
+      display: inline-block;
+      padding: 12px 20px;
+      background: #334155;
+      border-radius: 10px;
+      cursor: pointer;
+      margin: 10px 0;
+      color: white;
+    }
+    body.light label { background: #e5e7eb; color: #111827; }
+
+    button {
+      padding: 12px 24px;
+      border: none;
+      border-radius: 10px;
+      background: #2563eb;
+      color: white;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    button:hover { background: #1e40af; }
+    button:disabled { background: #9ca3af; cursor: not-allowed; }
+
+    #status { margin-top: 12px; font-size: 0.9rem; }
+
+    .nav {
+      margin: 30px 0;
+      text-align: center;
+    }
+    .nav a {
+      color: #2563eb;
+      text-decoration: none;
+      font-weight: 600;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="wave">
+      <svg viewBox="0 0 1440 320"><path fill="#2563eb" fill-opacity="0.6" d="M0,64L48,85.3C96,107,192,149,288,176C384,203,480,213,576,197.3C672,181,768,139,864,138.7C960,139,1056,181,1152,208C1248,235,1344,245,1392,250.7L1440,256V0H0Z"></path></svg>
+    </div>
+    <h1>📄 PDF → JPG</h1>
+    <p>Перетворіть PDF у зображення прямо у браузері</p>
+  </header>
+
+  <div class="card">
+    <input id="pdfInput" type="file" accept="application/pdf">
+    <label for="pdfInput" id="fileLabel">📂 Оберіть PDF</label>
+    <div id="status">Очікування файлу...</div>
+    <div id="preview"></div>
+  </div>
+
+  <div class="nav">
+    <a href="index.html">⬅ Повернутись на головну</a>
+  </div>
+
+  <!-- PDF.js -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+  <script>
+    const input = document.getElementById('pdfInput');
+    const status = document.getElementById('status');
+    const preview = document.getElementById('preview');
+
+    input.addEventListener('change', async () => {
+      if (!input.files.length) return;
+      const file = input.files[0];
+      status.innerText = `Завантаження: ${file.name}`;
+
+      const reader = new FileReader();
+      reader.onload = async function(e) {
+        const typedarray = new Uint8Array(e.target.result);
+        const pdf = await pdfjsLib.getDocument(typedarray).promise;
+
+        status.innerText = `Знайдено сторінок: ${pdf.numPages}`;
+        preview.innerHTML = "";
+
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const viewport = page.getViewport({ scale: 2.0 });
+          const canvas = document.createElement("canvas");
+          const ctx = canvas.getContext("2d");
+          canvas.width = viewport.width;
+          canvas.height = viewport.height;
+
+          await page.render({ canvasContext: ctx, viewport: viewport }).promise;
+          preview.appendChild(canvas);
+
+          // Кнопка завантаження JPG
+          const link = document.createElement("a");
+          link.innerText = `⬇️ Завантажити сторінку ${i}`;
+          link.style.display = "block";
+          link.style.margin = "10px 0";
+          link.href = canvas.toDataURL("image/jpeg");
+          link.download = `${file.name.replace(/\.pdf$/, '')}-page${i}.jpg`;
+          preview.appendChild(link);
+        }
+      };
+      reader.readAsArrayBuffer(file);
+    });
+  </script>
+</body>
+</html>
