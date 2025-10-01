@@ -5,6 +5,16 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>MP4 → MP3 Онлайн Конвертер</title>
   <meta name="description" content="Перетворіть MP4 у MP3 онлайн безкоштовно прямо у браузері.">
+  
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3DNVM302YW"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'G-3DNVM302YW');
+  </script>
   <style>
     body {
       margin: 0;
@@ -100,11 +110,14 @@
     <ul id="fileList"></ul>
 
     <div>
-      <label for="bitrate">Бітрейт MP3:</label><br>
+      <label for="bitrate">Якість MP3:</label><br>
       <select id="bitrate">
-        <option value="320k">320 kbps</option>
-        <option value="192k" selected>192 kbps</option>
-        <option value="128k">128 kbps</option>
+        <option value="64k">64 kbps (низька, маленький розмір)</option>
+        <option value="96k">96 kbps (низька)</option>
+        <option value="128k">128 kbps (середня)</option>
+        <option value="192k" selected>192 kbps (рекомендована)</option>
+        <option value="256k">256 kbps (висока)</option>
+        <option value="320k">320 kbps (максимальна якість)</option>
       </select>
     </div>
 
@@ -116,15 +129,23 @@
     <a href="index.html">⬅ Повернутись на головну</a>
   </div>
 
+  <!-- FFmpeg -->
   <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
   <script>
     const { createFFmpeg, fetchFile } = FFmpeg;
-    const ffmpeg = createFFmpeg({ log: false });
+    const ffmpeg = createFFmpeg({
+      log: false,
+      corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js',
+      mainName: 'main'
+    });
+
     const input = document.getElementById('videoInput');
     const btn = document.getElementById('convertBtn');
     const status = document.getElementById('status');
     const fileListDisplay = document.getElementById('fileList');
     const bitrateSelector = document.getElementById('bitrate');
+    const fileLabel = document.getElementById('fileLabel');
+
     let isLoaded = false;
 
     ffmpeg.setProgress(({ ratio }) => {
@@ -143,31 +164,46 @@
     window.addEventListener('load', loadFFmpeg);
 
     input.addEventListener('change', () => {
+      const files = input.files;
       fileListDisplay.innerHTML = '';
-      [...input.files].forEach(file => {
-        let li = document.createElement('li');
-        li.textContent = file.name;
-        fileListDisplay.appendChild(li);
-      });
+      if (files.length > 0) {
+        fileLabel.classList.add('selected');
+        for (let i = 0; i < files.length; i++) {
+          const li = document.createElement('li');
+          li.textContent = files[i].name;
+          fileListDisplay.appendChild(li);
+        }
+      } else {
+        fileLabel.classList.remove('selected');
+      }
     });
 
     btn.addEventListener('click', async () => {
       const files = input.files;
       if (!files.length) return alert('Оберіть відео');
       btn.disabled = true;
+      const bitrate = bitrateSelector.value;
+      const bitrateText = bitrateSelector.options[bitrateSelector.selectedIndex].text;
+
       try {
-        for (let file of files) {
+        for (let i = 0; i < files.length; i++) {
+          const file = files[i];
+          status.innerText = `Конвертація ${i + 1}/${files.length} (${bitrateText}): ${file.name}`;
+
           ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(file));
-          await ffmpeg.run('-i', 'input.mp4', '-vn', '-acodec', 'libmp3lame', '-b:a', bitrateSelector.value, 'output.mp3');
+          await ffmpeg.run('-i', 'input.mp4', '-vn', '-acodec', 'libmp3lame', '-b:a', bitrate, 'output.mp3');
+
           const data = ffmpeg.FS('readFile', 'output.mp3');
           const url = URL.createObjectURL(new Blob([data.buffer], { type: 'audio/mp3' }));
+
           const a = document.createElement('a');
           a.href = url;
           a.download = file.name.replace(/\.[^/.]+$/, "") + '.mp3';
           a.click();
         }
-        status.innerText = 'Готово ✅';
+        status.innerText = 'Усі файли готові ✅';
       } catch (err) {
+        console.error(err);
         status.innerText = 'Помилка ❌';
       } finally {
         btn.disabled = false;
