@@ -3,10 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>MP4 → WebM/AVI/GIF Онлайн Конвертер</title>
+<title>MP4 → Інші формати Онлайн Конвертер</title>
 <style>
 body { margin:0; font-family:"Segoe UI", sans-serif; background:#0f172a; color:#f1f5f9; display:flex; flex-direction:column; align-items:center; min-height:100vh; }
-.card { background:#1e293b; padding:32px; border-radius:14px; max-width:600px; width:100%; text-align:center; margin-top:40px; }
+.card { background:#1e293b; padding:32px; border-radius:14px; max-width:650px; width:100%; text-align:center; margin-top:40px; }
 input[type="file"] { display:none; }
 label { display:inline-block; padding:12px 20px; background:#334155; border-radius:10px; cursor:pointer; margin:10px 0; color:white; }
 label.selected { border:2px solid #2563eb; }
@@ -17,13 +17,15 @@ select { margin-top:10px; padding:8px 12px; border-radius:10px; border:1px solid
 #status { margin-top:12px; font-size:0.9rem; min-height:24px; }
 ul { text-align:left; padding-left:20px; }
 ul li { margin-bottom:4px; }
+.progress-container { width:100%; background:#334155; border-radius:10px; height:20px; margin-top:10px; overflow:hidden; }
+.progress-bar { height:100%; width:0%; background:#2563eb; transition:width 0.2s; }
 </style>
 </head>
 <body>
 
 <div class="card">
-  <h1>🎬 MP4 → WebM / AVI / GIF</h1>
-  <p>Конвертуйте відео прямо в браузері (без серверів).</p>
+  <h1>🎬 Онлайн Конвертер Відео</h1>
+  <p>Конвертуйте MP4 у будь-який формат прямо в браузері.</p>
 
   <input id="videoInput" type="file" accept="video/*" multiple>
   <label for="videoInput" id="fileLabel">📂 Оберіть відео</label>
@@ -32,8 +34,12 @@ ul li { margin-bottom:4px; }
   <div style="margin-top:16px;">
     <label for="format">Формат:</label><br>
     <select id="format">
-      <option value="webm">WebM (оптимізовано для браузера)</option>
-      <option value="avi">AVI (класичний формат)</option>
+      <option value="mp4">MP4 (універсальний)</option>
+      <option value="mkv">MKV</option>
+      <option value="mov">MOV</option>
+      <option value="flv">FLV</option>
+      <option value="webm">WebM</option>
+      <option value="avi">AVI</option>
       <option value="gif">GIF (анімація)</option>
     </select>
   </div>
@@ -59,9 +65,13 @@ ul li { margin-bottom:4px; }
 
   <button id="convertBtn" disabled>Завантаження FFmpeg...</button>
   <div id="status">Ініціалізація...</div>
+
+  <div class="progress-container">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
 </div>
 
-<!-- Підключаємо ffmpeg.wasm -->
+<!-- FFmpeg -->
 <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 <script>
 const { createFFmpeg, fetchFile } = FFmpeg;
@@ -80,6 +90,7 @@ const fileListDisplay = document.getElementById('fileList');
 const formatSelect = document.getElementById('format');
 const qualitySelect = document.getElementById('quality');
 const resolutionSelect = document.getElementById('resolution');
+const progressBar = document.getElementById('progressBar');
 
 let isLoaded = false;
 
@@ -111,9 +122,11 @@ input.addEventListener('change', () => {
   }
 });
 
-// Прогрес конвертації
+// Прогрес
 ffmpeg.setProgress(({ ratio }) => {
-  status.innerText = `Прогрес: ${(ratio*100).toFixed(0)}%`;
+  const percent = Math.round(ratio * 100);
+  status.innerText = `Прогрес: ${percent}%`;
+  progressBar.style.width = percent + '%';
 });
 
 // Конвертація
@@ -136,7 +149,8 @@ btn.addEventListener('click', async () => {
   try {
     for(let i=0; i<files.length; i++){
       const file = files[i];
-      status.innerText = `Конвертація ${i+1}/${files.length} (${resolution}p, ${quality}): ${file.name}`;
+      status.innerText = `Конвертація ${i+1}/${files.length}: ${file.name}`;
+      progressBar.style.width = '0%';
 
       ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(file));
 
@@ -157,10 +171,12 @@ btn.addEventListener('click', async () => {
       a.download = file.name.replace(/\.[^/.]+$/,"") + `.${format}`;
       a.click();
     }
-    status.innerText = 'Усі файли готові ✅';
+    status.innerText = '✅ Усі файли готові';
+    progressBar.style.width = '100%';
   } catch(err){
     console.error(err);
-    status.innerText = 'Помилка конвертації ❌';
+    status.innerText = '❌ Помилка конвертації';
+    progressBar.style.width = '0%';
   } finally{
     btn.disabled = false;
   }
