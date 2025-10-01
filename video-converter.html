@@ -23,7 +23,7 @@ ul li { margin-bottom:4px; }
 
 <div class="card">
   <h1>🎬 MP4 → WebM / AVI / GIF</h1>
-  <p>Конвертуйте відео прямо в браузері на GitHub Pages.</p>
+  <p>Конвертуйте відео прямо в браузері (без серверів).</p>
 
   <input id="videoInput" type="file" accept="video/*" multiple>
   <label for="videoInput" id="fileLabel">📂 Оберіть відео</label>
@@ -32,28 +32,28 @@ ul li { margin-bottom:4px; }
   <div style="margin-top:16px;">
     <label for="format">Формат:</label><br>
     <select id="format">
-      <option value="webm">WebM</option>
-      <option value="avi">AVI</option>
-      <option value="gif">GIF</option>
+      <option value="webm">WebM (оптимізовано для браузера)</option>
+      <option value="avi">AVI (класичний формат)</option>
+      <option value="gif">GIF (анімація)</option>
     </select>
   </div>
 
   <div style="margin-top:16px;">
     <label for="quality">Якість:</label><br>
     <select id="quality">
-      <option value="high">Висока</option>
-      <option value="medium">Середня</option>
-      <option value="low">Низька</option>
+      <option value="high">Висока (2000 kbps)</option>
+      <option value="medium" selected>Середня (1000 kbps)</option>
+      <option value="low">Низька (500 kbps)</option>
     </select>
   </div>
 
   <div style="margin-top:16px;">
     <label for="resolution">Роздільна здатність:</label><br>
     <select id="resolution">
-      <option value="360">360p</option>
+      <option value="360">360p (низька)</option>
       <option value="480">480p</option>
-      <option value="720">720p</option>
-      <option value="1080">1080p</option>
+      <option value="720" selected>720p (рекомендовано)</option>
+      <option value="1080">1080p (висока)</option>
     </select>
   </div>
 
@@ -61,14 +61,15 @@ ul li { margin-bottom:4px; }
   <div id="status">Ініціалізація...</div>
 </div>
 
+<!-- Підключаємо ffmpeg.wasm -->
 <script src="https://unpkg.com/@ffmpeg/ffmpeg@0.11.6/dist/ffmpeg.min.js"></script>
 <script>
 const { createFFmpeg, fetchFile } = FFmpeg;
 
-// Використовуємо локальний файл на GitHub Pages
 const ffmpeg = createFFmpeg({
-  log: true,
-  corePath: 'ffmpeg-core.js' // обов'язково у тій же папці, що й index.html
+  log: false,
+  corePath: 'https://unpkg.com/@ffmpeg/core-st@0.11.1/dist/ffmpeg-core.js',
+  mainName: 'main'
 });
 
 const input = document.getElementById('videoInput');
@@ -135,7 +136,7 @@ btn.addEventListener('click', async () => {
   try {
     for(let i=0; i<files.length; i++){
       const file = files[i];
-      status.innerText = `Конвертація ${i+1}/${files.length}: ${file.name}`;
+      status.innerText = `Конвертація ${i+1}/${files.length} (${resolution}p, ${quality}): ${file.name}`;
 
       ffmpeg.FS('writeFile', 'input.mp4', await fetchFile(file));
 
@@ -149,7 +150,8 @@ btn.addEventListener('click', async () => {
       }
 
       const data = ffmpeg.FS('readFile', outputName);
-      const url = URL.createObjectURL(new Blob([data.buffer], { type:`video/${format}` }));
+      const mimeType = format === 'gif' ? 'image/gif' : `video/${format}`;
+      const url = URL.createObjectURL(new Blob([data.buffer], { type: mimeType }));
       const a = document.createElement('a');
       a.href = url;
       a.download = file.name.replace(/\.[^/.]+$/,"") + `.${format}`;
