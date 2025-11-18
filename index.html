@@ -5,17 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Онлайн конвертери файлів (Безкоштовно, Без реклами)</title>
   <meta name="description" content="Онлайн-конвертери файлів: MP4 → MP3, PDF → JPG, відео у різні формати. Швидко, безкоштовно, без завантаження на сервер.">
-  
-  <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3DNVM302YW"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
-    gtag('config', 'G-3DNVM302YW');
-  </script>
-  
   <style>
     :root {
       --bg-light: #f9fafb;
@@ -49,7 +39,7 @@
 
     header {
       text-align: center;
-      padding: 60px 20px 40px;
+      padding: 60px 20px 20px;
       position: relative;
     }
 
@@ -75,6 +65,21 @@
       display: block;
       width: 100%;
       height: auto;
+    }
+
+    .search-box {
+      max-width: 400px;
+      margin: 20px auto;
+      display: flex;
+    }
+
+    .search-box input {
+      flex: 1;
+      padding: 10px 14px;
+      border-radius: var(--radius);
+      border: none;
+      font-size: 1rem;
+      outline: none;
     }
 
     .tools {
@@ -143,9 +148,14 @@
     </div>
     <h1>🛠 Онлайн-конвертери</h1>
     <p>Швидко та безкоштовно перетворюйте відео, аудіо та документи.</p>
+
+    <!-- Пошук -->
+    <div class="search-box">
+      <input type="text" id="searchInput" placeholder="Пошук інструментів..." onkeyup="filterTools()">
+    </div>
   </header>
 
-  <div class="tools">
+  <div class="tools" id="toolsContainer">
     <a href="mp4-to-mp3.html" class="card">
       <img src="https://img.icons8.com/color/96/000000/mp3.png" class="icon" alt="MP4 to MP3">
       MP4 → MP3
@@ -156,11 +166,15 @@
     </a>
     <a href="pdf-editor.html" class="card">
       <img src="https://img.icons8.com/color/96/000000/edit-file.png" class="icon" alt="PDF Editor">
-      Радактор PDF
+      Редактор PDF
     </a>
     <a href="video-converter.html" class="card">
       <img src="https://img.icons8.com/color/96/000000/video.png" class="icon" alt="Video Converter">
       Відео → Відео
+    </a>
+    <a href="qr-generator.html" class="card">
+      <img src="https://img.icons8.com/color/96/000000/qr-code.png" class="icon" alt="QR Generator">
+      Генерація QR-кодів
     </a>
     <a href="about.html" class="card">
       <img src="https://img.icons8.com/color/96/000000/info.png" class="icon" alt="About">
@@ -179,6 +193,16 @@
         document.body.classList.add('light');
       }
     });
+
+    // Функція пошуку по картках
+    function filterTools() {
+      let input = document.getElementById('searchInput').value.toLowerCase();
+      let tools = document.getElementById('toolsContainer').getElementsByClassName('card');
+      for (let i = 0; i < tools.length; i++) {
+        let text = tools[i].textContent || tools[i].innerText;
+        tools[i].style.display = text.toLowerCase().includes(input) ? "" : "none";
+      }
+    }
   </script>
 </body>
 </html>
