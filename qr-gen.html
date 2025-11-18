@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Генератор та Розпізнавач QR-кодів</title>
+<meta name="description" content="Генератор QR-кодів онлайн. Створюйте та розпізнавайте QR-коди безкоштовно.">
+
+<style>
+  :root {
+    --bg-light: #f9fafb;
+    --bg-dark: #0f172a;
+    --text-light: #111827;
+    --text-dark: #f1f5f9;
+    --primary: #2563eb;
+    --primary-hover: #1e40af;
+    --radius: 14px;
+    --shadow: 0 6px 20px rgba(0,0,0,0.15);
+  }
+  body {
+    font-family: "Segoe UI", sans-serif;
+    margin: 0;
+    padding: 0;
+    background: var(--bg-dark);
+    color: var(--text-dark);
+    transition: background 0.4s, color 0.4s;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+  }
+  body.light { background: var(--bg-light); color: var(--text-light); }
+  header { text-align: center; padding: 50px 20px 20px; width: 100%; position: relative; }
+  h1 { font-size: 2.4rem; margin: 10px 0; display: flex; align-items: center; justify-content: center; gap: 10px; }
+  p { font-size: 1.05rem; opacity: 0.9; }
+  .wave { position: absolute; top: 0; left: 0; width: 100%; z-index: -1; }
+  .wave svg { display: block; width: 100%; height: auto; }
+
+  .qr-container { text-align: center; margin: 20px auto; }
+  input { width: 300px; max-width: 90%; padding: 10px 14px; font-size: 1rem; border-radius: var(--radius); border: none; margin: 5px 0; outline: none; }
+  .button-group { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-top: 10px; }
+  button { background: var(--primary); color: white; cursor: pointer; box-shadow: var(--shadow); padding: 10px 14px; font-size: 1rem; border-radius: var(--radius); border: none; transition: background 0.3s; }
+  button:hover { background: var(--primary-hover); }
+
+  #qrcode-wrapper { margin: 20px auto; display: flex; justify-content: center; align-items: center; background: white; padding: 15px; border-radius: var(--radius); box-shadow: 0 6px 20px rgba(0,0,0,0.15); width: fit-content; }
+  #qrcode canvas { display: block; }
+
+  .recognize-container, .camera-container { margin-top: 30px; text-align: center; }
+  video { width: 300px; max-width: 90%; border-radius: var(--radius); margin-top: 10px; display: block; margin-left:auto; margin-right:auto; }
+  .recognized-text { margin-top: 10px; font-weight: bold; text-align: center; }
+
+  .theme-toggle { margin: 20px auto; cursor: pointer; font-size: 0.95rem; padding: 10px 18px; border-radius: var(--radius); background: var(--primary); color: white; box-shadow: var(--shadow); transition: background 0.3s; }
+  .theme-toggle:hover { background: var(--primary-hover); }
+  .back-link { margin-top: 20px; }
+  .back-link a { color: var(--primary); text-decoration: none; }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="wave">
+    <svg viewBox="0 0 1440 320"><path fill="#2563eb" fill-opacity="0.6" d="M0,64L48,85.3C96,107,192,149,288,176C384,203,480,213,576,197.3C672,181,768,139,864,138.7C960,139,1056,181,1152,208C1248,235,1344,245,1392,250.7L1440,256V0H0Z"></path></svg>
+  </div>
+  <h1>
+    <img src="https://img.icons8.com/color/48/000000/qr-code.png" alt="QR Icon" style="height:48px;width:48px;">
+    Генератор та Розпізнавач QR-кодів
+  </h1>
+  <p>Створюйте та розпізнавайте QR-коди онлайн.</p>
+</header>
+
+<div class="qr-container">
+  <input type="text" id="qrText" placeholder="Введіть текст або URL">
+  <div class="button-group">
+    <button onclick="generateQR()">Генерувати QR</button>
+    <button onclick="downloadQR()">Завантажити QR</button>
+  </div>
+  <div id="qrcode-wrapper">
+    <div id="qrcode"></div>
+  </div>
+</div>
+
+<div class="recognize-container">
+  <h3>Розпізнати QR з файлу:</h3>
+  <input type="file" id="qrFileInput" accept="image/*">
+  <button onclick="recognizeQR()">Розпізнати</button>
+  <div class="recognized-text" id="recognizedText"></div>
+</div>
+
+<div class="camera-container">
+  <h3>Розпізнати QR з камери:</h3>
+  <button style="margin:auto; display:block;" onclick="startCamera()">Розпізнати з камери</button>
+  <video id="video" autoplay></video>
+  <div class="recognized-text" id="cameraText"></div>
+</div>
+
+<div class="theme-toggle" onclick="toggleTheme()">🌓 Змінити тему</div>
+<div class="back-link"><a href="index.html">← Назад на головну</a></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsqr@1.4.0/dist/jsQR.js"></script>
+
+<script>
+let qrCodeInstance;
+
+function generateQR(){
+  const text = document.getElementById("qrText").value.trim();
+  const container = document.getElementById("qrcode");
+  container.innerHTML = "";
+  if(text){
+    qrCodeInstance = new QRCode(container, {
+      text: text,
+      width: 200,
+      height: 200,
+      colorDark: "#000000",
+      colorLight: "#ffffff",
+      correctLevel: QRCode.CorrectLevel.H
+    });
+  }
+}
+
+function downloadQR(){
+  if(!qrCodeInstance) return;
+  const canvas = document.querySelector("#qrcode canvas");
+  if(!canvas) return;
+  const link = document.createElement("a");
+  link.href = canvas.toDataURL("image/png");
+  link.download = "qr-code.png";
+  link.click();
+}
+
+function recognizeQR(){
+  const fileInput = document.getElementById("qrFileInput");
+  const output = document.getElementById("recognizedText");
+  output.textContent = "";
+  if(fileInput.files.length===0) return alert("Оберіть зображення QR-коду.");
+  const file = fileInput.files[0];
+  const reader = new FileReader();
+  reader.onload = function(){
+    const img = new Image();
+    img.onload = function(){
+      const canvas = document.createElement("canvas");
+      canvas.width = img.width;
+      canvas.height = img.height;
+      const ctx = canvas.getContext("2d");
+      ctx.drawImage(img,0,0);
+      const imageData = ctx.getImageData(0,0,canvas.width,canvas.height);
+      const code = jsQR(imageData.data, imageData.width, imageData.height);
+      output.textContent = code ? "Розпізнаний текст: " + code.data : "QR-код не розпізнано.";
+    }
+    img.src = reader.result;
+  }
+  reader.readAsDataURL(file);
+}
+
+// Камера
+let videoStream;
+function startCamera(){
+  const video = document.getElementById("video");
+  const output = document.getElementById("cameraText");
+  output.textContent = "";
+  if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+    navigator.mediaDevices.getUserMedia({video:{facingMode:"environment"}})
+      .then(stream=>{
+        video.srcObject = stream;
+        videoStream=stream;
+        video.setAttribute("playsinline",true);
+        video.play();
+        scanCamera(video,output);
+      }).catch(()=>alert("Не вдалося отримати доступ до камери."));
+  } else { alert("Камера не підтримується."); }
+}
+
+function scanCamera(video, output){
+  const canvas=document.createElement("canvas");
+  const ctx=canvas.getContext("2d");
+  const tick = () => {
+    if(video.readyState===video.HAVE_ENOUGH_DATA){
+      canvas.width=video.videoWidth;
+      canvas.height=video.videoHeight;
+      ctx.drawImage(video,0,0,canvas.width,canvas.height);
+      const imageData=ctx.getImageData(0,0,canvas.width,canvas.height);
+      const code=jsQR(imageData.data,imageData.width,imageData.height);
+      if(code){ output.textContent="Розпізнаний текст: "+code.data; stopCamera(); return; }
+    }
+    requestAnimationFrame(tick);
+  }
+  requestAnimationFrame(tick);
+}
+
+function stopCamera(){
+  if(videoStream) videoStream.getTracks().forEach(track=>track.stop());
+}
+
+function toggleTheme(){ document.body.classList.toggle('light'); }
+window.addEventListener('load',()=>{if(window.matchMedia('(prefers-color-scheme: light)').matches) document.body.classList.add('light');});
+</script>
+
+</body>
+</html>
