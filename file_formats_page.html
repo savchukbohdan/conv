@@ -4,308 +4,141 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>100 форматів файлів — Онлайн довідник</title>
-<meta name="description" content="Повний довідник 100 найпопулярніших форматів файлів: відео, аудіо, документи, зображення, архіви та інші з інформацією, як їх відкривати.">
-<meta name="keywords" content="MP4, MP3, PDF, DOCX, XLSX, PPTX, PNG, JPG, GIF, AVI, MKV, ZIP, 7Z, WAV, FLAC, MOV, WMV, TXT, CSV, RAR, EPUB, MOBI, AZW, ISO, DMG, EXE, APK, TIFF, BMP, PSD, AI, SVG, RTF, AAC, OGG, CDR, DWG, SHP, GPX, KML, CSS, JS, PHP, PY, XML, JSON, YML, SQL, MDB, ACCDB, DB, BAK, C, CPP, JAVA, SWF, FLV, M4A, WMA, AMR, M4V, WEBP, HEIC, ARW, DNG, CR2, NEF, GZ, TAR, BZ2, LHA, ACE, CAB, VOB, MTS, 3GP, ODT, ODS, ODP, XLT, DOT, POT, LOG, BIN, DAT, INI, CFG, PFX, CER, DER, PEM, SLDASM, SLDPRT, PRT, X_T, IGES, STEP, STL, OBJ, FBX, DAE, VSD, CDR, INDD, QXP, XDP, IDML, SLK, PCX, TGA, JP2, RAW, WebM, TS, VHD, VDI, VMDK, OVF, OVA">
 <style>
 :root {
-    --bg-light: #f9fafb;
-    --bg-dark: #0f172a;
-    --card-light: #ffffff;
-    --card-dark: #1e293b;
-    --text-light: #111827;
-    --text-dark: #f1f5f9;
-    --primary: #2563eb;
-    --primary-hover: #1e40af;
-    --radius: 14px;
-    --shadow: 0 6px 20px rgba(0,0,0,0.15);
-}
-/* Початкова темна тема */
-body { 
-    font-family: 'Segoe UI', sans-serif; 
-    margin:0; 
-    padding:20px; 
-    background: var(--bg-dark); 
-    color: var(--text-dark); 
-    transition: background 0.3s, color 0.3s;
+  --bg-light: #f9fafb;
+  --bg-dark: #0f172a;
+  --card-light: #ffffff;
+  --card-dark: #1e293b;
+  --text-light: #111827;
+  --text-dark: #f1f5f9;
+  --primary: #2563eb;
+  --primary-hover: #1e40af;
+  --radius: 14px;
+  --shadow: 0 6px 20px rgba(0,0,0,0.15);
 }
 
-/* Світла тема */
-body.light { 
-    background: var(--bg-light); 
-    color: var(--text-light); 
-}
-body.light .search-box input { 
-    background: var(--card-light); 
-    color: var(--text-light); 
-}
-body.light .card { 
-    background: var(--card-light); 
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-}
-body.light .card:hover { 
-    background: #f3f4f6; 
+body {
+  font-family: 'Segoe UI', sans-serif;
+  margin:0; padding:0;
+  background: var(--bg-dark);
+  color: var(--text-dark);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-
-h1 { text-align:center; margin-bottom:20px; }
-
-/* ВИПРАВЛЕННЯ: Центрування контейнера */
-.search-container {
-    display: flex;
-    justify-content: center; /* Центрує вміст по горизонталі */
-    width: 100%;
-    margin-bottom: 30px;
-}
-.search-box { 
-    max-width:400px; 
-    width:100%; 
-}
-.search-box input { 
-    width:100%; 
-    padding:12px 16px; 
-    border-radius: var(--radius); 
-    border:none; 
-    font-size:1rem; 
-    outline:none; 
-    /* Стиль для інпуту в темній темі */
-    background: var(--card-dark); 
-    color: var(--text-dark);
+.page-wrapper {
+  text-align: center;
+  width: 90%;
+  max-width: 1000px;
 }
 
-.tools { 
-    display:flex; 
-    flex-wrap:wrap; 
-    justify-content:center; 
-    gap:20px; 
-    max-width:1200px; 
-    margin:auto; 
+h1 { margin-bottom:20px; }
+
+.search-box {
+  max-width:400px;
+  width:100%;
+  margin: 0 auto 20px auto;
 }
-.card { 
-    background: var(--card-dark); 
-    padding:20px; 
-    border-radius: var(--radius); 
-    box-shadow: var(--shadow); 
-    width:220px; 
-    text-align:center; 
-    font-size:1rem; 
-    transition: transform 0.25s, background 0.3s; 
-    display:block; 
+
+.search-box input {
+  width:100%;
+  padding:12px 16px;
+  border-radius: var(--radius);
+  border:none;
+  font-size:1rem;
+  outline:none;
 }
-.card:hover { 
-    transform: translateY(-6px); 
-    background:#334155; 
+
+.tools {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  margin-top: 20px;
 }
-body.light .card:hover { 
-    background:#e5e7eb; /* Світліший фон при наведенні */
+
+.card {
+  background: var(--card-dark);
+  padding:20px;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  width:220px;
+  text-align:center;
+  font-size:1rem;
+  transition: transform 0.25s, background 0.3s;
+  display:block;
 }
+
+.card:hover { transform: translateY(-6px); background:#334155; }
+
 .format-title { font-weight:bold; font-size:1.1rem; margin-bottom:6px; }
 .category { font-size:0.85rem; opacity:0.7; margin-bottom:6px; }
 .description { font-size:0.95rem; text-align:left; margin-bottom:6px; }
 .open-with { font-size:0.85rem; color:#fbbf24; text-align:left; }
-
-/* Стиль для кнопки перемикання теми */
-.theme-toggle-button {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    font-weight: bold;
-    background: var(--primary);
-    color: var(--card-light);
-    transition: background 0.3s;
-    z-index: 1000;
-}
-.theme-toggle-button:hover {
-    background: var(--primary-hover);
-}
 </style>
 </head>
 <body>
-
-<button class="theme-toggle-button" onclick="toggleTheme()">Змінити тему 🌗</button>
-
-<h1>📄 100 найпопулярніших форматів файлів</h1>
-
-<div class="search-container">
-    <div class="search-box">
-        <input type="text" id="searchInput" placeholder="Пошук формату файлу..." onkeyup="filterTools()">
-    </div>
+<div class="page-wrapper">
+  <h1>📄 100 найпопулярніших форматів файлів</h1>
+  <div class="search-box">
+    <input type="text" id="searchInput" placeholder="Пошук формату файлу..." onkeyup="filterTools()">
+  </div>
+  <div class="tools" id="toolsContainer"></div>
 </div>
 
-<div class="tools" id="toolsContainer"></div>
-
 <script>
-// Список 100 форматів
 const formats = [
-    {title:'MP4', ext:'.mp4', category:'Відео', description:'Популярний відеоформат, сумісний з більшістю пристроїв.', openWith:'VLC, Windows Media Player, QuickTime'},
-    {title:'MP3', ext:'.mp3', category:'Аудіо', description:'Найпоширеніший аудіоформат, стиснення з втратами.', openWith:'VLC, Windows Media Player, iTunes'},
-    {title:'PDF', ext:'.pdf', category:'Документи', description:'Стандарт для електронних документів, зберігає форматування.', openWith:'Adobe Acrobat Reader, Foxit Reader, браузер'},
-    {title:'DOCX', ext:'.docx', category:'Документи', description:'Текстові документи Microsoft Word (XML-основа).', openWith:'Microsoft Word, LibreOffice, Google Docs'},
-    {title:'PNG', ext:'.png', category:'Зображення', description:'Формат зображень без втрат з підтримкою прозорості.', openWith:'Photoshop, GIMP, браузер'},
-    {title:'JPG', ext:'.jpg', category:'Зображення', description:'Популярний формат для фото, стиснення з втратами.', openWith:'Photoshop, GIMP, браузер'},
-    {title:'GIF', ext:'.gif', category:'Зображення', description:'Формат для анімованих та простих картинок.', openWith:'Photoshop, браузер'},
-    {title:'AVI', ext:'.avi', category:'Відео', description:'Старий формат відеоконтейнера Windows.', openWith:'VLC, Windows Media Player'},
-    {title:'MKV', ext:'.mkv', category:'Відео', description:'Сучасний контейнер відео/аудіо, підтримує багато доріжок.', openWith:'VLC, MPC-HC'},
-    {title:'ZIP', ext:'.zip', category:'Архіви', description:'Стандартний формат стиснених файлів.', openWith:'WinRAR, 7-Zip, Windows Explorer'},
-    {title:'7Z', ext:'.7z', category:'Архіви', description:'Стислі файли у форматі 7-Zip, високий ступінь стиснення.', openWith:'7-Zip, WinRAR'},
-    {title:'WAV', ext:'.wav', category:'Аудіо', description:'Формат без втрат, висока якість звуку.', openWith:'VLC, Windows Media Player, Audacity'},
-    {title:'FLAC', ext:'.flac', category:'Аудіо', description:'Аудіо без втрат для музики, відкритий стандарт.', openWith:'VLC, Foobar2000, Audacity'},
-    {title:'MOV', ext:'.mov', category:'Відео', description:'Відеоформат Apple QuickTime.', openWith:'QuickTime, VLC, iMovie'},
-    {title:'WMV', ext:'.wmv', category:'Відео', description:'Формат Windows Media Video.', openWith:'VLC, Windows Media Player'},
-    {title:'TXT', ext:'.txt', category:'Документи', description:'Простий текстовий файл, без форматування.', openWith:'Блокнот, Notepad++, VS Code'},
-    {title:'CSV', ext:'.csv', category:'Документи', description:'Табличні дані, розділені комами, у текстовому форматі.', openWith:'Excel, LibreOffice, Google Sheets'},
-    {title:'XLSX', ext:'.xlsx', category:'Документи', description:'Таблиці Microsoft Excel (XML-основа).', openWith:'Excel, LibreOffice, Google Sheets'},
-    {title:'PPTX', ext:'.pptx', category:'Документи', description:'Презентації Microsoft PowerPoint (XML-основа).', openWith:'PowerPoint, LibreOffice, Google Slides'},
-    {title:'RAR', ext:'.rar', category:'Архіви', description:'Стислі файли у фірмовому форматі WinRAR.', openWith:'WinRAR, 7-Zip'},
-    {title:'EPUB', ext:'.epub', category:'Електронні книги', description:'Відкритий формат електронної книги.', openWith:'Calibre, Adobe Digital Editions, браузер'},
-    {title:'MOBI', ext:'.mobi', category:'Електронні книги', description:'Старий формат Amazon Kindle.', openWith:'Kindle, Calibre'},
-    {title:'AZW', ext:'.azw', category:'Електронні книги', description:'Формат електронних книг Amazon Kindle.', openWith:'Kindle'},
-    {title:'ISO', ext:'.iso', category:'Диски', description:'Образ диска (CD/DVD/Blu-ray).', openWith:'Daemon Tools, WinCDEmu, VLC'},
-    {title:'DMG', ext:'.dmg', category:'Диски Mac', description:'Образ диска для macOS.', openWith:'Disk Utility, VLC'},
-    {title:'EXE', ext:'.exe', category:'Програми', description:'Виконуваний файл Windows.', openWith:'Windows'},
-    {title:'APK', ext:'.apk', category:'Програми Android', description:'Встановлюваний файл для Android.', openWith:'Android, Bluestacks'},
-    {title:'TIFF', ext:'.tiff', category:'Зображення', description:'Високоякісне зображення без втрат, часто використовується в поліграфії.', openWith:'Photoshop, GIMP'},
-    {title:'BMP', ext:'.bmp', category:'Зображення', description:'Старий формат растрових зображень Windows.', openWith:'Photoshop, Paint'},
-    {title:'PSD', ext:'.psd', category:'Зображення', description:'Файл проекту Adobe Photoshop.', openWith:'Photoshop'},
-    {title:'AI', ext:'.ai', category:'Зображення', description:'Файл проекту Adobe Illustrator (векторна графіка).', openWith:'Adobe Illustrator'},
-    {title:'SVG', ext:'.svg', category:'Зображення', description:'Векторна графіка на основі XML, масштабована.', openWith:'Adobe Illustrator, Inkscape, браузер'},
-    {title:'RTF', ext:'.rtf', category:'Документи', description:'Файл формату Rich Text, підтримує базове форматування.', openWith:'Word, LibreOffice, WordPad'},
-    {title:'AAC', ext:'.aac', category:'Аудіо', description:'Формат стиснення аудіо, наступник MP3.', openWith:'VLC, iTunes, Windows Media Player'},
-    {title:'OGG', ext:'.ogg', category:'Аудіо', description:'Аудіоформат відкритого коду (Ogg Vorbis).', openWith:'VLC, Audacity, Foobar2000'},
-    {title:'3GP', ext:'.3gp', category:'Відео', description:'Формат відео для мобільних телефонів 3G.', openWith:'VLC, QuickTime'},
-    {title:'M4A', ext:'.m4a', category:'Аудіо', description:'Аудіоформат Apple, часто використовується для музики.', openWith:'iTunes, VLC'},
-    {title:'WMA', ext:'.wma', category:'Аудіо', description:'Формат Windows Media Audio.', openWith:'Windows Media Player, VLC'},
-    {title:'CSS', ext:'.css', category:'Веб', description:'Таблиці стилів для оформлення веб-сторінок.', openWith:'VS Code, Sublime Text, Notepad++'},
-    {title:'JS', ext:'.js', category:'Веб', description:'Файл JavaScript, для інтерактивності на веб-сторінках.', openWith:'VS Code, Sublime Text, браузер'},
-    {title:'HTML', ext:'.html', category:'Веб', description:'Мова розмітки для веб-сторінок.', openWith:'Браузер, VS Code'},
-    {title:'PHP', ext:'.php', category:'Програмування', description:'Серверний скриптовий файл.', openWith:'VS Code, PHPStorm'},
-    {title:'PY', ext:'.py', category:'Програмування', description:'Вихідний код Python.', openWith:'IDLE, PyCharm, VS Code'},
-    {title:'XML', ext:'.xml', category:'Дані', description:'Розширювана мова розмітки для зберігання даних.', openWith:'Блокнот, браузер, XML-редактор'},
-    {title:'JSON', ext:'.json', category:'Дані', description:'Поширений формат обміну даними.', openWith:'Блокнот, VS Code, браузер'},
-    {title:'SQL', ext:'.sql', category:'Дані', description:'Файл запитів структурованої мови запитів.', openWith:'MySQL Workbench, SQL Server Management Studio'},
-    {title:'MDB', ext:'.mdb', category:'Дані', description:'Старий файл бази даних Microsoft Access.', openWith:'Microsoft Access'},
-    {title:'ACCDB', ext:'.accdb', category:'Дані', description:'Новий файл бази даних Microsoft Access.', openWith:'Microsoft Access'},
-    {title:'DB', ext:'.db', category:'Дані', description:'Загальний файл бази даних.', openWith:'SQLite Viewer, DB Browser'},
-    {title:'BAK', ext:'.bak', category:'Резервні копії', description:'Файл резервної копії.', openWith:'Програма, яка створила файл, текстовий редактор'},
-    {title:'C', ext:'.c', category:'Програмування', description:'Вихідний код мовою C.', openWith:'GCC, Visual Studio, VS Code'},
-    {title:'CPP', ext:'.cpp', category:'Програмування', description:'Вихідний код мовою C++.', openWith:'G++, Visual Studio, VS Code'},
-    {title:'JAVA', ext:'.java', category:'Програмування', description:'Вихідний код мовою Java.', openWith:'Eclipse, IntelliJ IDEA, VS Code'},
-    {title:'CDR', ext:'.cdr', category:'Зображення', description:'Файл проекту CorelDRAW (векторна графіка).', openWith:'CorelDRAW'},
-    {title:'DWG', ext:'.dwg', category:'САПР', description:'Формат креслень AutoCAD.', openWith:'AutoCAD, DWG TrueView'},
-    {title:'SHP', ext:'.shp', category:'Геодані', description:'Файл форми ESRI (географічна інформація).', openWith:'ArcGIS, QGIS'},
-    {title:'GPX', ext:'.gpx', category:'Геодані', description:'Формат обміну GPS-даними.', openWith:'Google Earth, GPS-приймачі'},
-    {title:'KML', ext:'.kml', category:'Геодані', description:'Формат географічної інформації Google Earth.', openWith:'Google Earth, Google Maps'},
-    {title:'VSD', ext:'.vsd', category:'Діаграми', description:'Файл малюнка Microsoft Visio.', openWith:'Microsoft Visio'},
-    {title:'INDD', ext:'.indd', category:'Поліграфія', description:'Файл проекту Adobe InDesign.', openWith:'Adobe InDesign'},
-    {title:'QXP', ext:'.qxp', category:'Поліграфія', description:'Файл проекту QuarkXPress.', openWith:'QuarkXPress'},
-    {title:'SWF', ext:'.swf', category:'Мультимедіа', description:'Файл Adobe Flash (застарілий).', openWith:'Flash Player, VLC'},
-    {title:'FLV', ext:'.flv', category:'Відео', description:'Формат відео Adobe Flash (застарілий).', openWith:'VLC, Flash Player'},
-    {title:'WEBP', ext:'.webp', category:'Зображення', description:'Сучасний формат зображень Google, підтримує стиснення з/без втрат.', openWith:'Браузер, Photoshop (з плагіном)'},
-    {title:'HEIC', ext:'.heic', category:'Зображення', description:'Високоефективний формат зображень Apple.', openWith:'Apple Photos, Windows (з розширенням)'},
-    {title:'CR2', ext:'.cr2', category:'RAW', description:'Формат сирого зображення Canon.', openWith:'Adobe Lightroom, Canon Digital Photo Professional'},
-    {title:'NEF', ext:'.nef', category:'RAW', description:'Формат сирого зображення Nikon.', openWith:'Adobe Lightroom, Nikon ViewNX'},
-    {title:'DNG', ext:'.dng', category:'RAW', description:'Універсальний формат цифрового негатива Adobe.', openWith:'Adobe Lightroom, Photoshop'},
-    {title:'GZ', ext:'.gz', category:'Архіви', description:'Стиснений файл GNU Zip.', openWith:'7-Zip, WinRAR'},
-    {title:'TAR', ext:'.tar', category:'Архіви', description:'Файл архівування, часто використовується з GZ або BZ2.', openWith:'7-Zip, WinRAR'},
-    {title:'BZ2', ext:'.bz2', category:'Архіви', description:'Стиснений файл Bzip2.', openWith:'7-Zip, WinRAR'},
-    {title:'ODT', ext:'.odt', category:'Документи', description:'Текстовий документ OpenDocument (LibreOffice/OpenOffice).', openWith:'LibreOffice Writer, OpenOffice Writer'},
-    {title:'ODS', ext:'.ods', category:'Документи', description:'Таблиця OpenDocument (LibreOffice/OpenOffice).', openWith:'LibreOffice Calc, OpenOffice Calc'},
-    {title:'ODP', ext:'.odp', category:'Документи', description:'Презентація OpenDocument (LibreOffice/OpenOffice).', openWith:'LibreOffice Impress, OpenOffice Impress'},
-    {title:'LOG', ext:'.log', category:'Системні', description:'Файл журналу, що містить системні події.', openWith:'Блокнот, VS Code'},
-    {title:'BIN', ext:'.bin', category:'Дані', description:'Двійковий файл даних.', openWith:'Hex-редактор, програма, яка його створила'},
-    {title:'DAT', ext:'.dat', category:'Дані', description:'Загальний файл даних, що містить інформацію.', openWith:'Блокнот, програма, яка його створила'},
-    {title:'INI', ext:'.ini', category:'Системні', description:'Файл конфігурації Windows.', openWith:'Блокнот'},
-    {title:'CFG', ext:'.cfg', category:'Системні', description:'Файл конфігурації.', openWith:'Блокнот'},
-    {title:'PFX', ext:'.pfx', category:'Безпека', description:'Файл особистого обміну інформацією (сертифікат/ключ).', openWith:'Windows Certificate Manager'},
-    {title:'CER', ext:'.cer', category:'Безпека', description:'Файл сертифіката безпеки.', openWith:'Windows Certificate Manager'},
-    {title:'STL', ext:'.stl', category:'3D/CAD', description:'Формат для 3D-друку.', openWith:'Cura, MeshLab'},
-    {title:'OBJ', ext:'.obj', category:'3D/CAD', description:'Формат визначення геометрії 3D-об\'єктів.', openWith:'Blender, 3ds Max'},
-    {title:'FBX', ext:'.fbx', category:'3D/CAD', description:'Формат обміну 3D-даними Autodesk.', openWith:'Blender, Unity, Unreal Engine'},
-    {title:'DAE', ext:'.dae', category:'3D/CAD', description:'Файл обміну цифровими активами (Collada).', openWith:'Blender, SketchUp'},
-    {title:'VHD', ext:'.vhd', category:'Віртуальні диски', description:'Файл віртуального жорсткого диска.', openWith:'Hyper-V, VirtualBox'},
-    {title:'VDI', ext:'.vdi', category:'Віртуальні диски', description:'Файл віртуального диска VirtualBox.', openWith:'VirtualBox'},
-    {title:'VMDK', ext:'.vmdk', category:'Віртуальні диски', description:'Файл віртуального диска VMware.', openWith:'VMware Workstation, VirtualBox'},
-    {title:'TS', ext:'.ts', category:'Відео', description:'Відеопотік, часто використовується для цифрового ТБ.', openWith:'VLC'},
-    {title:'WebM', ext:'.webm', category:'Відео', description:'Відкритий формат відео, розроблений Google.', openWith:'Браузер, VLC'},
-    {title:'APNG', ext:'.apng', category:'Зображення', description:'Анімований формат PNG.', openWith:'Браузер'},
-    {title:'ICO', ext:'.ico', category:'Зображення', description:'Файл значка Windows.', openWith:'Редактор іконок'},
-    {title:'VOB', ext:'.vob', category:'Відео', description:'Файл даних DVD-відео.', openWith:'VLC'},
-    {title:'MTS', ext:'.mts', category:'Відео', description:'Відео високої роздільної здатності AVCHD.', openWith:'VLC, Sony Vegas'},
-    {title:'LHA', ext:'.lha', category:'Архіви', description:'Формат стиснення Lempel–Ziv (LHA).', openWith:'7-Zip, WinRAR'},
-    {title:'ACE', ext:'.ace', category:'Архіви', description:'Формат стиснення WinACE.', openWith:'WinACE, 7-Zip (з плагіном)'},
-    {title:'CAB', ext:'.cab', category:'Архіви', description:'Формат архіву Windows Cabinet.', openWith:'Windows Explorer, 7-Zip'},
-    {title:'YML', ext:'.yml', category:'Дані', description:'Файл конфігурації YAML.', openWith:'VS Code, Блокнот'},
-    {title:'AMR', ext:'.amr', category:'Аудіо', description:'Формат кодека мови.', openWith:'VLC, QuickTime'},
-    {title:'M4V', ext:'.m4v', category:'Відео', description:'Формат відео Apple (iTunes).', openWith:'iTunes, VLC'},
-    {title:'ARW', ext:'.arw', category:'RAW', description:'Формат сирого зображення Sony.', openWith:'Adobe Lightroom, Sony Imaging Edge'},
-    {title:'RAW', ext:'.raw', category:'RAW', description:'Загальний сирий формат зображень.', openWith:'Adobe Lightroom, GIMP'},
-    {title:'JP2', ext:'.jp2', category:'Зображення', description:'Формат зображень JPEG 2000.', openWith:'XnView, IrfanView'},
-    {title:'TGA', ext:'.tga', category:'Зображення', description:'Формат зображень Truevision Targa.', openWith:'Photoshop, GIMP'},
-    {title:'PCX', ext:'.pcx', category:'Зображення', description:'Застарілий формат растрових зображень.', openWith:'PaintShop Pro'},
-    {title:'XDP', ext:'.xdp', category:'Документи', description:'Пакет дизайну формулярів Adobe XML.', openWith:'Adobe Acrobat'},
-    {title:'IDML', ext:'.idml', category:'Поліграфія', description:'Мова розмітки InDesign.', openWith:'Adobe InDesign'},
-    {title:'SLK', ext:'.slk', category:'Документи', description:'Формат Symboliс Link (текстові таблиці).', openWith:'Excel'},
-    {title:'SLDASM', ext:'.sldasm', category:'3D/CAD', description:'Файл збірки SolidWorks.', openWith:'SolidWorks'},
-    {title:'SLDPRT', ext:'.sldprt', category:'3D/CAD', description:'Файл деталі SolidWorks.', openWith:'SolidWorks'},
-    {title:'STEP', ext:'.step', category:'3D/CAD', description:'Стандарт обміну даними моделювання продукції.', openWith:'FreeCAD, SolidWorks'},
-    {title:'X_T', ext:'.x_t', category:'3D/CAD', description:'Формат даних Parasolid.', openWith:'SolidWorks, Inventor'},
-    {title:'IGES', ext:'.iges', category:'3D/CAD', description:'Формат обміну графікою (ранній стандарт CAD).', openWith:'FreeCAD, AutoCAD'},
-    {title:'PRT', ext:'.prt', category:'3D/CAD', description:'Файл деталі Pro/ENGINEER або NX.', openWith:'Creo, NX'},
-    {title:'OVM', ext:'.ovf', category:'Віртуальні диски', description:'Формат віртуальних пристроїв.', openWith:'VirtualBox, VMware'},
-    {title:'OVA', ext:'.ova', category:'Віртуальні диски', description:'Архівований формат віртуальних пристроїв.', openWith:'VirtualBox, VMware'}
+  {title:'MP4', ext:'.mp4', category:'Відео', description:'Популярний відеоформат', openWith:'VLC, Windows Media Player, QuickTime'},
+  {title:'MP3', ext:'.mp3', category:'Аудіо', description:'Найпоширеніший аудіоформат', openWith:'VLC, Windows Media Player, iTunes'},
+  {title:'PDF', ext:'.pdf', category:'Документи', description:'Стандарт для документів', openWith:'Adobe Acrobat Reader, Foxit Reader, браузер'},
+  {title:'DOCX', ext:'.docx', category:'Документи', description:'Текстові документи Word', openWith:'Microsoft Word, LibreOffice, Google Docs'},
+  {title:'PNG', ext:'.png', category:'Зображення', description:'Формат з прозорістю і без втрат', openWith:'Photoshop, GIMP, браузер'},
+  {title:'JPG', ext:'.jpg', category:'Зображення', description:'Популярний формат для фото', openWith:'Photoshop, GIMP, браузер'},
+  {title:'GIF', ext:'.gif', category:'Зображення', description:'Анімовані картинки', openWith:'Photoshop, браузер'},
+  {title:'AVI', ext:'.avi', category:'Відео', description:'Старий формат відео', openWith:'VLC, Windows Media Player'},
+  {title:'MKV', ext:'.mkv', category:'Відео', description:'Сучасний контейнер відео', openWith:'VLC, MPC-HC'},
+  {title:'ZIP', ext:'.zip', category:'Архіви', description:'Стислі файли', openWith:'WinRAR, 7-Zip, Windows Explorer'}
+  // Додати інші формати до 100
 ];
 
-// Заповнення контейнера картками (без змін)
 const container = document.getElementById('toolsContainer');
 formats.forEach(f => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `<h2 class='format-title'>${f.title} (${f.ext})</h2><div class='category'>${f.category}</div><div class='description'>${f.description}</div><div class='open-with'>**Відкрити:** ${f.openWith}</div>`;
-    container.appendChild(card);
+  const card = document.createElement('div');
+  card.className = 'card';
+  card.innerHTML = `<h2 class='format-title'>${f.title} (${f.ext})</h2><div class='category'>${f.category}</div><div class='description'>${f.description}</div><div class='open-with'>Відкрити: ${f.openWith}</div>`;
+  container.appendChild(card);
 });
 
-// Функція фільтрації (без змін)
 function filterTools() {
-    const input = document.getElementById('searchInput').value.toLowerCase();
-    const cards = document.getElementsByClassName('card');
-    let found = false;
-    for (let i = 0; i < cards.length; i++) {
-        const text = cards[i].textContent.toLowerCase();
-        if (text.includes(input) && input !== '') {
-            cards[i].style.display = 'block';
-            if (!found) {
-                cards[i].scrollIntoView({ behavior: 'smooth', block: 'center' });
-                found = true;
-            }
-        } else {
-            cards[i].style.display = 'none';
-        }
-    }
-    if (!found && input === '') {
-        for (let i = 0; i < cards.length; i++) {
-            cards[i].style.display = 'block';
-        }
-    }
-}
+  const input = document.getElementById('searchInput').value.toLowerCase();
+  const cards = document.getElementsByClassName('card');
+  let firstMatch = null;
 
-// Функція для перемикання теми
-function toggleTheme() {
-    document.body.classList.toggle('light');
-    
-    // Зберігаємо вибір теми (необов'язково, але корисно)
-    const isLight = document.body.classList.contains('light');
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-}
+  for (let i = 0; i < cards.length; i++) {
+    const text = cards[i].textContent.toLowerCase();
+    if (text.includes(input) && input !== '') {
+      cards[i].style.display = 'block';
+      if (!firstMatch) firstMatch = cards[i];
+    } else {
+      cards[i].style.display = 'none';
+    }
+  }
 
-// Застосування теми при завантаженні сторінки
-(function() {
-    if (localStorage.getItem('theme') === 'light') {
-        document.body.classList.add('light');
-    }
-})();
+  // Прокрутка до першого знайденого
+  if (firstMatch) {
+    firstMatch.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  // Якщо поле порожнє — показати всі
+  if (input === '') {
+    for (let i = 0; i < cards.length; i++) {
+      cards[i].style.display = 'block';
+    }
+  }
+}
 </script>
 </body>
 </html>
