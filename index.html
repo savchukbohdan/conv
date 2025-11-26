@@ -1,224 +1,300 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Онлайн конвертери файлів (Безкоштовно, Без реклами)</title>
-  <meta name="description" content="Онлайн-конвертери файлів: MP4 → MP3, PDF → JPG, відео у різні формати. Швидко, безкоштовно, без завантаження на сервер.">
- <!-- Google tag (gtag.js) -->
-  <script async src="https://www.googletagmanager.com/gtag/js?id=G-3DNVM302YW"></script>
-  <script>
-    window.dataLayer = window.dataLayer || [];
-    function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Безкоштовні Онлайн Конвертери Файлів: Відео, Аудіо, PDF, MP4 в MP3, PDF в JPG | Без реєстрації</title>
+    <meta name="description" content="Швидкі та безкоштовні онлайн-конвертери файлів для будь-яких потреб: MP4 → MP3, PDF → JPG, Відео, Аудіо, Документи. Працює без завантаження файлів на сервер і без реклами.">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3DNVM302YW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
 
-    gtag('config', 'G-3DNVM302YW');
-  </script>
-  <style>
-    :root {
-      --bg-light: #f9fafb;
-      --bg-dark: #0f172a;
-      --card-light: #ffffff;
-      --card-dark: #1e293b;
-      --text-light: #111827;
-      --text-dark: #f1f5f9;
-      --primary: #2563eb;
-      --primary-hover: #1e40af;
-      --radius: 14px;
-      --shadow: 0 6px 20px rgba(0,0,0,0.15);
-    }
+        gtag('config', 'G-3DNVM302YW');
+    </script>
+    <style>
+        :root {
+            --bg-light: #f9fafb;
+            --bg-dark: #0f172a;
+            --card-light: #ffffff;
+            --card-dark: #1e293b;
+            --text-light: #111827;
+            --text-dark: #f1f5f9;
+            --primary: #2563eb;
+            --primary-hover: #1e40af;
+            --radius: 14px;
+            --shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
 
-    body {
-      font-family: "Segoe UI", sans-serif;
-      margin: 0;
-      padding: 0;
-      background: var(--bg-dark);
-      color: var(--text-dark);
-      transition: background 0.4s, color 0.4s;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-    }
+        body {
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: background 0.4s, color 0.4s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
 
-    body.light {
-      background: var(--bg-light);
-      color: var(--text-light);
-    }
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
 
-    header {
-      text-align: center;
-      padding: 60px 20px 20px;
-      position: relative;
-    }
+        header {
+            text-align: center;
+            padding: 60px 20px 20px;
+            position: relative;
+        }
 
-    h1 {
-      font-size: 2.6rem;
-      margin-bottom: 12px;
-    }
+        h1 {
+            font-size: 2.6rem;
+            margin-bottom: 12px;
+        }
 
-    p {
-      font-size: 1.1rem;
-      opacity: 0.9;
-    }
+        p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
 
-    .wave {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: -1;
-    }
+        .wave {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            z-index: -1;
+        }
 
-    .wave svg {
-      display: block;
-      width: 100%;
-      height: auto;
-    }
+        .wave svg {
+            display: block;
+            width: 100%;
+            height: auto;
+        }
 
-    .search-box {
-      max-width: 400px;
-      margin: 20px auto;
-      display: flex;
-    }
+        .search-box {
+            max-width: 400px;
+            margin: 20px auto;
+            display: flex;
+        }
 
-    .search-box input {
-      flex: 1;
-      padding: 10px 14px;
-      border-radius: var(--radius);
-      border: none;
-      font-size: 1rem;
-      outline: none;
-    }
+        .search-box input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 1rem;
+            outline: none;
+        }
 
-    .tools {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 24px;
-      max-width: 1000px;
-      width: 100%;
-      padding: 20px;
-      margin: auto;
-    }
+        .tools {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 24px;
+            max-width: 1000px;
+            width: 100%;
+            padding: 20px;
+            margin: 20px auto 40px;
+        }
+        
+        /* Стилі для нових секцій */
+        .content-section {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
 
-    .card {
-      background: var(--card-dark);
-      padding: 28px;
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      text-decoration: none;
-      color: inherit;
-      transition: transform 0.25s, background 0.3s;
-      text-align: center;
-      font-size: 1.1rem;
-    }
+        .content-section h2 {
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+        }
+        
+        .feature-list {
+            list-style: none;
+            padding: 0;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        
+        .feature-list li {
+            background: var(--card-dark);
+            padding: 15px;
+            border-left: 4px solid var(--primary);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        body.light .feature-list li {
+            background: var(--card-light);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
 
-    body.light .card {
-      background: var(--card-light);
-    }
+        .faq-item h3 {
+            cursor: pointer;
+            color: var(--primary);
+            margin-bottom: 5px;
+            font-size: 1.2rem;
+        }
 
-    .card:hover {
-      transform: translateY(-6px);
-      background: #334155;
-    }
+        .faq-item p {
+            padding-left: 20px;
+            font-size: 1rem;
+            opacity: 0.8;
+            border-left: 2px solid var(--primary);
+            padding-top: 5px;
+        }
 
-    body.light .card:hover {
-      background: #f3f4f6;
-    }
+        .card {
+            background: var(--card-dark);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.25s, background 0.3s;
+            text-align: center;
+            font-size: 1.1rem;
+        }
 
-    .icon {
-      width: 60px;
-      height: 60px;
-      margin-bottom: 12px;
-    }
+        body.light .card {
+            background: var(--card-light);
+        }
 
-    .theme-toggle {
-      margin: 30px auto;
-      cursor: pointer;
-      font-size: 0.95rem;
-      padding: 10px 18px;
-      border-radius: var(--radius);
-      background: var(--primary);
-      color: white;
-      box-shadow: var(--shadow);
-      transition: background 0.3s;
-    }
+        .card:hover {
+            transform: translateY(-6px);
+            background: #334155;
+        }
 
-    .theme-toggle:hover {
-      background: var(--primary-hover);
-    }
-  </style>
+        body.light .card:hover {
+            background: #f3f4f6;
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 12px;
+        }
+
+        .theme-toggle {
+            margin: 30px auto;
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-hover);
+        }
+    </style>
 </head>
 <body>
 
-  <header>
-    <div class="wave">
-      <svg viewBox="0 0 1440 320"><path fill="#2563eb" fill-opacity="0.6" d="M0,64L48,85.3C96,107,192,149,288,176C384,203,480,213,576,197.3C672,181,768,139,864,138.7C960,139,1056,181,1152,208C1248,235,1344,245,1392,250.7L1440,256V0H0Z"></path></svg>
+    <header>
+        <div class="wave">
+            <svg viewBox="0 0 1440 320"><path fill="#2563eb" fill-opacity="0.6" d="M0,64L48,85.3C96,107,192,149,288,176C384,203,480,213,576,197.3C672,181,768,139,864,138.7C960,139,1056,181,1152,208C1248,235,1344,245,1392,250.7L1440,256V0H0Z"></path></svg>
+        </div>
+        <h1>🛠 Онлайн-конвертери Файлів</h1>
+        <p>Швидко та безкоштовно перетворюйте **відео, аудіо та документи** у потрібний вам формат. Працює локально у вашому браузері.</p>
+
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Пошук інструментів: MP3, PDF, Відео..." onkeyup="filterTools()">
+        </div>
+    </header>
+    
+    <div class="tools" id="toolsContainer">
+        <a href="mp4-to-mp3.html" class="card">
+            <img src="https://img.icons8.com/color/96/000000/mp3.png" class="icon" alt="MP4 to MP3" loading="lazy">
+            MP4 → MP3
+        </a>
+        <a href="file_formats_page.html" class="card">
+            <img src="https://img.icons8.com/color/96/000000/folder-invoices.png" class="icon" alt="Довідник форматів" loading="lazy">
+            Довідник форматів
+        </a>
+        <a href="pdf-to-jpg.html" class="card">
+            <img src="https://img.icons8.com/color/96/000000/pdf.png" class="icon" alt="PDF to JPG" loading="lazy">
+            PDF → JPG
+        </a>
+        <a href="pdf-editor.html" class="card">
+            <img src="https://img.icons8.com/color/96/000000/edit-file.png" class="icon" alt="PDF Editor" loading="lazy">
+            Редактор PDF
+        </a>
+        <a href="video-converter.html" class="card">
+            <img src="https://img.icons8.com/color/96/000000/video.png" class="icon" alt="Video Converter" loading="lazy">
+            Відео → Відео
+        </a>
+        <a href="qr-generator.html" class="card">
+            <img src="https://img.icons8.com/color/96/000000/qr-code.png" class="icon" alt="QR Generator" loading="lazy">
+            Генерація QR-кодів
+        </a>
+        <a href="about.html" class="card">
+            <img src="https://img.icons8.com/color/96/000000/info.png" class="icon" alt="Про сервіс" loading="lazy">
+            Про сервіс
+        </a>
     </div>
-    <h1>🛠 Онлайн-конвертери</h1>
-    <p>Швидко та безкоштовно перетворюйте відео, аудіо та документи.</p>
 
-    <!-- Пошук -->
-    <div class="search-box">
-      <input type="text" id="searchInput" placeholder="Пошук інструментів..." onkeyup="filterTools()">
+    <div class="content-section">
+        <h2>Чому наш конвертер — найкращий вибір?</h2>
+        <ul class="feature-list">
+            <li>**Конфіденційність (Локальна Обробка):** Усі перетворення відбуваються безпосередньо у вашому браузері, тому ваші файли **не завантажуються на сервер**. Це гарантує максимальну безпеку даних.</li>
+            <li>**Швидкість та Ефективність:** Завдяки локальній обробці, **конвертація файлів** відбувається майже миттєво, без очікування завантаження та скачування.</li>
+            <li>**Абсолютна Безкоштовність:** Ми пропонуємо **безкоштовний конвертер** для відео, аудіо та документів без прихованих платежів, підписок чи настирливої реклами.</li>
+            <li>**Широкий Спектр Форматів:** Перетворюйте **MP4 у MP3**, **PDF у JPG**, а також використовуйте **редактор PDF** та інші інструменти для роботи з мультимедіа та документами.</li>
+        </ul>
     </div>
-  </header>
 
-  <div class="tools" id="toolsContainer">
-    <a href="mp4-to-mp3.html" class="card">
-      <img src="https://img.icons8.com/color/96/000000/mp3.png" class="icon" alt="MP4 to MP3">
-      MP4 → MP3
-    </a>
-    <a href="file_formats_page.html" class="card">
-      <img src="https://img.icons8.com/color/96/000000/folder-invoices.png" class="icon" alt="MP4 to MP3">
-      Довідник форматів
-    </a>
-    <a href="pdf-to-jpg.html" class="card">
-      <img src="https://img.icons8.com/color/96/000000/pdf.png" class="icon" alt="PDF to JPG">
-      PDF → JPG
-    </a>
-    <a href="pdf-editor.html" class="card">
-      <img src="https://img.icons8.com/color/96/000000/edit-file.png" class="icon" alt="PDF Editor">
-      Редактор PDF
-    </a>
-    <a href="video-converter.html" class="card">
-      <img src="https://img.icons8.com/color/96/000000/video.png" class="icon" alt="Video Converter">
-      Відео → Відео
-    </a>
-    <a href="qr-generator.html" class="card">
-      <img src="https://img.icons8.com/color/96/000000/qr-code.png" class="icon" alt="QR Generator">
-      Генерація QR-кодів
-    </a>
-    <a href="about.html" class="card">
-      <img src="https://img.icons8.com/color/96/000000/info.png" class="icon" alt="About">
-      Про сервіс
-    </a>
-  </div>
+    <div class="content-section">
+        <h2>Часті запитання (FAQ)</h2>
+        <div class="faq-item">
+            <h3>Як працює ваш онлайн-конвертер?</h3>
+            <p>Наш сервіс використовує технології, які дозволяють обробляти **файли відео, аудіо та документів** безпосередньо у вашому браузері. Ви обираєте файл, задаєте вихідний формат (наприклад, **MP4 в MP3**), і конвертація відбувається локально. Це швидко і безпечно.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Які формати ви підтримуєте?</h3>
+            <p>Ми постійно розширюємо список підтримуваних форматів. Наразі доступні популярні перетворення, такі як **перетворити PDF у зображення JPG**, **відео у різні формати**, а також інструменти для **редагування PDF** та **генерації QR-кодів**.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Чи є обмеження на розмір файлу?</h3>
+            <p>Оскільки обробка відбувається локально, обмеження залежать лише від потужності вашого пристрою та браузера. Зазвичай ви можете обробляти значно більші файли, ніж на сервісах, які вимагають завантаження. Це ідеальний **безкоштовний конвертер без лімітів**.</p>
+        </div>
+    </div>
+    
+    <div class="theme-toggle" onclick="toggleTheme()" role="button" aria-label="Змінити світлу чи темну тему">🌓 Змінити тему</div>
 
-  <div class="theme-toggle" onclick="toggleTheme()">🌓 Змінити тему</div>
+    <script>
+        function toggleTheme() {
+            document.body.classList.toggle('light');
+        }
+        window.addEventListener('load', () => {
+            if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+                document.body.classList.add('light');
+            }
+        });
 
-  <script>
-    function toggleTheme() {
-      document.body.classList.toggle('light');
-    }
-    window.addEventListener('load', () => {
-      if (window.matchMedia('(prefers-color-scheme: light)').matches) {
-        document.body.classList.add('light');
-      }
-    });
-
-    // Функція пошуку по картках
-    function filterTools() {
-      let input = document.getElementById('searchInput').value.toLowerCase();
-      let tools = document.getElementById('toolsContainer').getElementsByClassName('card');
-      for (let i = 0; i < tools.length; i++) {
-        let text = tools[i].textContent || tools[i].innerText;
-        tools[i].style.display = text.toLowerCase().includes(input) ? "" : "none";
-      }
-    }
-  </script>
+        // Функція пошуку по картках
+        function filterTools() {
+            let input = document.getElementById('searchInput').value.toLowerCase();
+            let tools = document.getElementById('toolsContainer').getElementsByClassName('card');
+            for (let i = 0; i < tools.length; i++) {
+                let text = tools[i].textContent || tools[i].innerText;
+                tools[i].style.display = text.toLowerCase().includes(input) ? "" : "none";
+            }
+        }
+    </script>
 </body>
 </html>
-
-
-
-
