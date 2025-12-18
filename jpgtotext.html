@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3DNVM302YW"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-3DNVM302YW');
+    </script>
+    
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Розпізнавання тексту з зображень (OCR) | Онлайн інструмент</title>
+    <meta name="description" content="Швидке розпізнавання тексту з зображень без завантаження на сервер. Перетворіть зображення у текст прямо у браузері.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <style>
+        /* Загальні стилі */
+        :root {
+            --bg-light: #f9fafb;
+            --bg-dark: #0f172a;
+            --card-light: #ffffff;
+            --card-dark: #1e293b;
+            --text-light: #111827;
+            --text-dark: #f1f5f9;
+            --primary: #2563eb;
+            --primary-hover: #1e40af;
+            --radius: 14px;
+            --shadow: 0 6px 20px rgba(0,0,0,0.15);
+        }
+
+        body {
+            font-family: "Segoe UI", sans-serif;
+            margin: 0;
+            padding: 0;
+            background: var(--bg-dark);
+            color: var(--text-dark);
+            transition: background 0.4s, color 0.4s;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        body.light {
+            background: var(--bg-light);
+            color: var(--text-light);
+        }
+
+        header {
+            text-align: center;
+            padding: 60px 20px 20px;
+            position: relative;
+        }
+
+        h1 {
+            font-size: 2.6rem;
+            margin-bottom: 12px;
+        }
+
+        p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .search-box {
+            max-width: 400px;
+            margin: 20px auto;
+            display: flex;
+        }
+
+        .search-box input {
+            flex: 1;
+            padding: 10px 14px;
+            border-radius: var(--radius);
+            border: none;
+            font-size: 1rem;
+            outline: none;
+        }
+
+        .content-section {
+            max-width: 1000px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+
+        .content-section h2 {
+            font-size: 2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+            border-bottom: 2px solid var(--primary);
+            padding-bottom: 5px;
+        }
+
+        .card {
+            background: var(--card-dark);
+            padding: 28px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-decoration: none;
+            color: inherit;
+            transition: transform 0.25s, background 0.3s;
+            text-align: center;
+            font-size: 1.1rem;
+        }
+
+        body.light .card {
+            background: var(--card-light);
+        }
+
+        .card:hover {
+            transform: translateY(-6px);
+            background: #334155;
+        }
+
+        body.light .card:hover {
+            background: #f3f4f6;
+        }
+
+        .icon {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 12px;
+        }
+
+        .theme-toggle {
+            margin: 30px auto;
+            cursor: pointer;
+            font-size: 0.95rem;
+            padding: 10px 18px;
+            border-radius: var(--radius);
+            background: var(--primary);
+            color: white;
+            box-shadow: var(--shadow);
+            transition: background 0.3s;
+        }
+
+        .theme-toggle:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Стилі для форми завантаження */
+        .ocr-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: var(--card-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .ocr-container input[type="file"] {
+            margin-bottom: 20px;
+        }
+
+        .ocr-result {
+            max-width: 100%;
+            padding: 20px;
+            margin-top: 20px;
+            background: var(--bg-light);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .btn-download {
+            margin-top: 20px;
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: var(--radius);
+            text-decoration: none;
+            box-shadow: var(--shadow);
+        }
+
+        .btn-download:hover {
+            background: var(--primary-hover);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🖼️ Розпізнавання тексту з зображень (OCR)</h1>
+        <p>Перетворюйте текст на зображеннях в редагований текст безпосередньо у вашому браузері.</p>
+    </header>
+
+    <div class="content-section">
+        <div class="ocr-container">
+            <h2>Завантажте зображення</h2>
+            <input type="file" id="imageInput" accept="image/*">
+            <button class="theme-toggle" onclick="processImage()">Розпізнати текст</button>
+
+            <div id="ocrResult" class="ocr-result"></div>
+
+            <a id="downloadBtn" class="btn-download" style="display:none;" download="ocr_result.txt">Завантажити текст</a>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.1/tesseract.min.js"></script>
+    <script>
+        function processImage() {
+            let fileInput = document.getElementById("imageInput");
+            let resultDiv = document.getElementById("ocrResult");
+            let downloadBtn = document.getElementById("downloadBtn");
+
+            if (fileInput.files.length === 0) {
+                alert("Будь ласка, завантажте зображення.");
+                return;
+            }
+
+            let file = fileInput.files[0];
+            resultDiv.innerHTML = "Розпізнається...";
+
+            Tesseract.recognize(
+                file,
+                'uk', // Мова розпізнавання (українська)
+                {
+                    logger: (m) => console.log(m) // Показує прогрес
+                }
+            ).then(({ data: { text } }) => {
+                resultDiv.textContent = text; // Виведення розпізнаного тексту
+
+                // Додаємо можливість скачати результат
+                downloadBtn.style.display = 'block';
+                downloadBtn.href = URL.createObjectURL(new Blob([text], { type: 'text/plain' }));
+            });
+        }
+    </script>
+
+</body>
+</html>
