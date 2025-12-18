@@ -1,131 +1,121 @@
 <!DOCTYPE html>
 <html lang="uk">
 <head>
-    <!-- Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-3DNVM302YW"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-        gtag('config', 'G-3DNVM302YW');
-    </script>
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>OCR — Розпізнавання тексту з зображень</title>
-    <meta name="description" content="Онлайн OCR — розпізнавання тексту з зображень без завантаження на сервер.">
+    <title>OCR PRO — Розпізнавання тексту з зображень</title>
+    <meta name="description" content="OCR PRO — розпізнавання тексту з зображень кирилиця / латиниця / автоматично.">
 
     <style>
         :root {
-            --bg-dark: #0f172a;
-            --bg-light: #f9fafb;
-            --card-dark: #1e293b;
-            --card-light: #ffffff;
-            --text-dark: #f1f5f9;
-            --text-light: #111827;
-            --primary: #2563eb;
-            --primary-hover: #1e40af;
-            --radius: 14px;
-            --shadow: 0 6px 20px rgba(0,0,0,.2);
+            --bg-dark:#0f172a;
+            --bg-light:#f9fafb;
+            --card-dark:#1e293b;
+            --card-light:#ffffff;
+            --text-dark:#f1f5f9;
+            --text-light:#111827;
+            --primary:#2563eb;
+            --radius:14px;
+            --shadow:0 6px 20px rgba(0,0,0,.2);
         }
 
         body {
-            margin: 0;
-            font-family: "Segoe UI", sans-serif;
-            background: var(--bg-dark);
-            color: var(--text-dark);
-            min-height: 100vh;
+            margin:0;
+            font-family:"Segoe UI",sans-serif;
+            background:var(--bg-dark);
+            color:var(--text-dark);
         }
-
         body.light {
-            background: var(--bg-light);
-            color: var(--text-light);
+            background:var(--bg-light);
+            color:var(--text-light);
         }
 
         header {
-            text-align: center;
-            padding: 60px 20px 30px;
+            text-align:center;
+            padding:60px 20px 30px;
         }
 
-        h1 {
-            font-size: 2.4rem;
-            margin-bottom: 10px;
-        }
-
-        p {
-            opacity: .85;
-        }
+        h1 {font-size:2.4rem}
 
         .container {
-            max-width: 900px;
-            margin: auto;
-            padding: 20px;
+            max-width:900px;
+            margin:auto;
+            padding:20px;
         }
 
         .card {
-            background: var(--card-dark);
-            border-radius: var(--radius);
-            padding: 25px;
-            box-shadow: var(--shadow);
+            background:var(--card-dark);
+            padding:25px;
+            border-radius:var(--radius);
+            box-shadow:var(--shadow);
+        }
+        body.light .card {background:var(--card-light)}
+
+        .dropzone {
+            border:2px dashed var(--primary);
+            border-radius:var(--radius);
+            padding:25px;
+            text-align:center;
+            cursor:pointer;
+            margin-bottom:15px;
         }
 
-        body.light .card {
-            background: var(--card-light);
+        .dropzone.drag {
+            background:rgba(37,99,235,.15);
         }
 
-        input[type=file] {
-            margin: 15px 0;
+        .lang-btn {
+            margin:5px;
+            padding:10px 16px;
+            border-radius:var(--radius);
+            border:2px solid var(--primary);
+            background:transparent;
+            color:inherit;
+            cursor:pointer;
         }
 
-        button {
-            background: var(--primary);
-            color: #fff;
-            border: none;
-            padding: 12px 22px;
-            border-radius: var(--radius);
-            cursor: pointer;
-            font-size: 1rem;
-            box-shadow: var(--shadow);
+        .lang-btn.active {
+            background:var(--primary);
+            color:#fff;
         }
 
-        button:hover {
-            background: var(--primary-hover);
-        }
-
-        .preview {
-            margin-top: 15px;
-            text-align: center;
+        button.main {
+            margin-top:15px;
+            padding:12px 24px;
+            background:var(--primary);
+            color:#fff;
+            border:none;
+            border-radius:var(--radius);
+            cursor:pointer;
+            box-shadow:var(--shadow);
         }
 
         .preview img {
-            max-width: 100%;
-            border-radius: var(--radius);
-            margin-top: 10px;
+            max-width:100%;
+            margin-top:15px;
+            border-radius:var(--radius);
         }
 
         .status {
-            margin-top: 15px;
-            font-size: .95rem;
-            color: #93c5fd;
-            white-space: pre-line;
+            margin-top:15px;
+            font-size:.95rem;
+            color:#93c5fd;
+            white-space:pre-line;
         }
 
         .result {
-            margin-top: 20px;
-            background: rgba(0,0,0,.3);
-            padding: 15px;
-            border-radius: var(--radius);
-            white-space: pre-wrap;
-            min-height: 120px;
+            margin-top:20px;
+            background:rgba(0,0,0,.3);
+            padding:15px;
+            border-radius:var(--radius);
+            min-height:120px;
+            white-space:pre-wrap;
         }
-
-        body.light .result {
-            background: #f3f4f6;
-        }
+        body.light .result {background:#f3f4f6}
 
         .theme-toggle {
-            margin: 30px auto;
-            display: block;
+            display:block;
+            margin:30px auto;
         }
     </style>
 </head>
@@ -133,85 +123,109 @@
 <body>
 
 <header>
-    <h1>🖼️ OCR — Розпізнавання тексту</h1>
-    <p>Завантаж зображення і отримай текст прямо у браузері</p>
+    <h1>🧠 OCR PRO</h1>
+    <p>Кирилиця • Латиниця • Автоматично</p>
 </header>
 
 <div class="container">
-    <div class="card">
+<div class="card">
 
-        <input type="file" id="imageInput" accept="image/*">
-
-        <button onclick="startOCR()">Розпізнати текст</button>
-
-        <div class="preview" id="preview"></div>
-
-        <div class="status" id="status">Статус: очікування файлу</div>
-
-        <div class="result" id="result">Результат зʼявиться тут...</div>
-
+    <div class="dropzone" id="dropzone">
+        📂 Перетягни зображення або клікни
+        <input type="file" id="imageInput" accept="image/*" hidden>
     </div>
 
-    <button class="theme-toggle" onclick="toggleTheme()">🌓 Змінити тему</button>
+    <div style="text-align:center">
+        <button class="lang-btn" id="auto">🔄 Автоматично</button>
+        <button class="lang-btn" id="cyr">🇺🇦 Кирилиця</button>
+        <button class="lang-btn" id="lat">🇬🇧 Латиниця</button>
+    </div>
+
+    <button class="main" onclick="startOCR()">Розпізнати текст</button>
+
+    <div class="preview" id="preview"></div>
+    <div class="status" id="status">Очікування файлу...</div>
+    <div class="result" id="result">Результат зʼявиться тут</div>
+
 </div>
 
-<!-- Tesseract.js -->
+<button class="main theme-toggle" onclick="toggleTheme()">🌓 Змінити тему</button>
+</div>
+
 <script src="https://cdn.jsdelivr.net/npm/tesseract.js@2.1.5/dist/tesseract.min.js"></script>
 
 <script>
-/* ===== ТЕМА ===== */
-function toggleTheme() {
+let ocrLang = localStorage.getItem("ocrLang") || "uk+eng";
+const buttons = { auto:"uk+eng", cyr:"uk+rus", lat:"eng" };
+
+function setActive(id) {
+    document.querySelectorAll(".lang-btn").forEach(b=>b.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+    ocrLang = buttons[id];
+    localStorage.setItem("ocrLang", ocrLang);
+}
+Object.keys(buttons).forEach(id=>{
+    document.getElementById(id).onclick=()=>setActive(id);
+});
+setActive(Object.keys(buttons).find(k=>buttons[k]===ocrLang) || "auto");
+
+function toggleTheme(){
     document.body.classList.toggle("light");
 }
 
-/* ===== OCR ===== */
-function startOCR() {
-    const input = document.getElementById("imageInput");
-    const result = document.getElementById("result");
-    const status = document.getElementById("status");
-    const preview = document.getElementById("preview");
+const dropzone = document.getElementById("dropzone");
+const input = document.getElementById("imageInput");
 
-    console.clear();
+dropzone.onclick = ()=>input.click();
 
-    if (!input.files || input.files.length === 0) {
-        alert("❌ Файл не вибрано");
-        return;
-    }
+dropzone.ondragover = e => {
+    e.preventDefault();
+    dropzone.classList.add("drag");
+};
+dropzone.ondragleave = ()=>dropzone.classList.remove("drag");
+dropzone.ondrop = e => {
+    e.preventDefault();
+    dropzone.classList.remove("drag");
+    input.files = e.dataTransfer.files;
+    previewImage();
+};
 
+input.onchange = previewImage;
+
+function previewImage(){
     const file = input.files[0];
-    console.log("📁 Файл:", file);
-
-    /* Preview */
+    if(!file) return;
     const reader = new FileReader();
-    reader.onload = () => {
-        preview.innerHTML = `<img src="${reader.result}">`;
+    reader.onload = ()=> {
+        document.getElementById("preview").innerHTML = `<img src="${reader.result}">`;
     };
     reader.readAsDataURL(file);
+}
 
-    result.textContent = "";
-    status.textContent = "🔄 Ініціалізація OCR...";
+function startOCR(){
+    const file = input.files[0];
+    if(!file){ alert("Файл не вибрано"); return; }
+
+    const status = document.getElementById("status");
+    const result = document.getElementById("result");
+
+    result.textContent="";
+    status.textContent="Ініціалізація OCR...";
 
     Tesseract.recognize(
         file,
-        'eng',   // стабільна мова
-        {
-            logger: m => {
-                console.log(m);
-                if (m.progress) {
-                    status.textContent =
-                        `🔍 ${m.status}\n⏳ ${Math.round(m.progress * 100)}%`;
-                }
+        ocrLang,
+        { logger:m=>{
+            if(m.progress){
+                status.textContent=`${m.status}\n${Math.round(m.progress*100)}%`;
             }
-        }
-    )
-    .then(({ data }) => {
-        console.log("✅ Готово", data);
-        result.textContent = data.text || "⚠️ Текст не знайдено";
-        status.textContent = "✅ Розпізнавання завершено";
-    })
-    .catch(err => {
-        console.error("❌ OCR помилка:", err);
-        status.textContent = "❌ Помилка OCR (див. консоль)";
+        }}
+    ).then(({data})=>{
+        result.textContent = data.text || "Текст не знайдено";
+        status.textContent="Готово ✅";
+    }).catch(err=>{
+        console.error(err);
+        status.textContent="Помилка OCR ❌";
     });
 }
 </script>
