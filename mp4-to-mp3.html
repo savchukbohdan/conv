@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Конвертер MP4 в MP3 онлайн — Локально та безпечно | conv.pp.ua</title>
+    <title>Конвертер Відео в MP3 онлайн — Локально | conv.pp.ua</title>
     <style>
         :root {
             --bg-color: #f8fafc;
@@ -14,9 +14,7 @@
             --primary-color: #2563eb;
             --primary-hover: #1d4ed8;
             --accent-bg: #eff6ff;
-            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05), 0 2px 4px -2px rgb(0 0 0 / 0.05);
-            --dropzone-bg: #ffffff;
-            --dropzone-border: #cbd5e1;
+            --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.05);
             --select-bg: #ffffff;
         }
 
@@ -30,303 +28,38 @@
             --primary-hover: #60a5fa;
             --accent-bg: #1e3a8a;
             --shadow: 0 4px 6px -1px rgb(0 0 0 / 0.3);
-            --dropzone-bg: #1e293b;
-            --dropzone-border: #475569;
             --select-bg: #1e293b;
         }
 
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            transition: background-color 0.3s, border-color 0.3s, color 0.3s;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; transition: background-color 0.3s, border-color 0.3s; }
+        body { font-family: system-ui, -apple-system, sans-serif; background-color: var(--bg-color); color: var(--text-color); display: flex; flex-direction: column; min-height: 100vh; }
+        header { max-width: 1200px; width: 100%; margin: 0 auto; padding: 1.5rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo-nav { display: flex; align-items: center; gap: 1rem; }
+        .logo { font-size: 1.5rem; font-weight: 800; color: var(--primary-color); text-decoration: none; }
+        .back-link { text-decoration: none; color: var(--text-muted); font-size: 0.875rem; }
+        .theme-toggle { background: var(--card-bg); border: 1px solid var(--card-border); color: var(--text-color); padding: 0.5rem 1rem; border-radius: 0.5rem; cursor: pointer; }
+        main { max-width: 800px; width: 100%; margin: 2rem auto 5rem; padding: 0 1.5rem; flex: 1; }
+        .tool-header { text-align: center; margin-bottom: 2.5rem; }
+        .tool-header h1 { font-size: 2.25rem; font-weight: 800; margin-bottom: 0.75rem; }
+        .tool-header p { color: var(--text-muted); }
+        .dropzone-container { background: var(--card-bg); border: 1px solid var(--card-border); border-radius: 1rem; padding: 2.5rem 1.5rem; box-shadow: var(--shadow); text-align: center; }
+        
+        .settings-box { display: flex; align-items: center; justify-content: center; gap: 1rem; margin-bottom: 2rem; padding: 1rem; background: var(--bg-color); border: 1px solid var(--card-border); border-radius: 0.75rem; }
+        .quality-select { background: var(--select-bg); color: var(--text-color); border: 1px solid var(--card-border); padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 600; outline: none; }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.5;
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-        }
+        .dropzone { border: 2px dashed var(--card-border); background: var(--bg-color); border-radius: 0.75rem; padding: 3rem 1.5rem; cursor: pointer; position: relative; }
+        .dropzone:hover, .dropzone.dragover { border-color: var(--primary-color); background: var(--accent-bg); }
+        .file-input { position: absolute; top: 0; left: 0; width: 100%; height: 100%; opacity: 0; cursor: pointer; }
+        .btn-browse { background: var(--primary-color); color: #ffffff; border: none; padding: 0.625rem 1.5rem; border-radius: 0.5rem; font-weight: 600; pointer-events: none; }
 
-        header {
-            max-width: 1200px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo-nav {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            text-decoration: none;
-        }
-
-        .back-link {
-            text-decoration: none;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            font-weight: 500;
-        }
-
-        .back-link:hover {
-            color: var(--primary-color);
-        }
-
-        .theme-toggle {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            color: var(--text-color);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            cursor: pointer;
-            font-weight: 500;
-            box-shadow: var(--shadow);
-        }
-
-        main {
-            max-width: 800px;
-            width: 100%;
-            margin: 2rem auto 5rem;
-            padding: 0 1.5rem;
-            flex: 1;
-        }
-
-        .tool-header {
-            text-align: center;
-            margin-bottom: 2.5rem;
-        }
-
-        .tool-header h1 {
-            font-size: 2.25rem;
-            font-weight: 800;
-            margin-bottom: 0.75rem;
-        }
-
-        .tool-header p {
-            color: var(--text-muted);
-            font-size: 1.05rem;
-        }
-
-        .dropzone-container {
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 1rem;
-            padding: 2.5rem 1.5rem;
-            box-shadow: var(--shadow);
-            text-align: center;
-        }
-
-        .settings-box {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            padding: 1rem;
-            background: var(--bg-color);
-            border: 1px solid var(--card-border);
-            border-radius: 0.75rem;
-        }
-
-        .settings-box label {
-            font-weight: 600;
-            font-size: 0.95rem;
-        }
-
-        .quality-select {
-            background: var(--select-bg);
-            color: var(--text-color);
-            border: 1px solid var(--card-border);
-            padding: 0.5rem 1rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            cursor: pointer;
-            outline: none;
-        }
-
-        .quality-select:focus {
-            border-color: var(--primary-color);
-        }
-
-        .dropzone {
-            border: 2px dashed var(--dropzone-border);
-            background: var(--bg-color);
-            border-radius: 0.75rem;
-            padding: 3rem 1.5rem;
-            cursor: pointer;
-            position: relative;
-        }
-
-        .dropzone:hover, .dropzone.dragover {
-            border-color: var(--primary-color);
-            background: var(--accent-bg);
-        }
-
-        .dropzone-icon {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-        }
-
-        .dropzone h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-
-        .dropzone p {
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .file-input {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            opacity: 0;
-            cursor: pointer;
-        }
-
-        .btn-browse {
-            background: var(--primary-color);
-            color: #ffffff;
-            border: none;
-            padding: 0.625rem 1.5rem;
-            border-radius: 0.5rem;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            pointer-events: none;
-        }
-
-        .dropzone:hover .btn-browse {
-            background: var(--primary-hover);
-        }
-
-        .process-box {
-            display: none;
-            margin-top: 2rem;
-            background: var(--bg-color);
-            border: 1px solid var(--card-border);
-            border-radius: 0.75rem;
-            padding: 1.5rem;
-            text-align: left;
-        }
-
-        .file-info {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-
-        .file-name {
-            word-break: break-all;
-            padding-right: 1rem;
-        }
-
-        .progress-bar-container {
-            background: var(--card-border);
-            border-radius: 999px;
-            height: 8px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .progress-bar {
-            background: var(--primary-color);
-            width: 0%;
-            height: 100%;
-            border-radius: 999px;
-            transition: width 0.1s ease;
-        }
-
-        .status-text {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        .btn-download {
-            display: none;
-            background: #10b981;
-            color: white;
-            padding: 0.5rem 1.25rem;
-            border-radius: 0.5rem;
-            text-decoration: none;
-            font-size: 0.9rem;
-            font-weight: 700;
-            box-shadow: 0 2px 4px rgb(16 185 129 / 0.2);
-        }
-
-        .btn-download:hover {
-            background: #059669;
-        }
-
-        .info-section {
-            margin-top: 4rem;
-            background: var(--card-bg);
-            border: 1px solid var(--card-border);
-            border-radius: 1rem;
-            padding: 2.5rem 2rem;
-            box-shadow: var(--shadow);
-        }
-
-        .info-section h2 {
-            font-size: 1.5rem;
-            font-weight: 700;
-            margin-bottom: 1.25rem;
-        }
-
-        .info-steps {
-            list-style: none;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .info-steps li strong {
-            display: block;
-            margin-bottom: 0.25rem;
-            font-size: 1.05rem;
-        }
-
-        .info-steps li p {
-            font-size: 0.875rem;
-            color: var(--text-muted);
-        }
-
-        footer {
-            text-align: center;
-            padding: 2rem;
-            color: var(--text-muted);
-            font-size: 0.875rem;
-            border-top: 1px solid var(--card-border);
-            margin-top: auto;
-        }
-
-        @media (max-width: 600px) {
-            .tool-header h1 { font-size: 1.75rem; }
-            .info-steps { grid-template-columns: 1fr; }
-            .settings-box { flex-direction: column; gap: 0.5rem; }
-        }
+        .process-box { display: none; margin-top: 2rem; background: var(--bg-color); border: 1px solid var(--card-border); border-radius: 0.75rem; padding: 1.5rem; text-align: left; }
+        .file-info { display: flex; justify-content: space-between; margin-bottom: 1rem; font-weight: 600; }
+        .progress-bar-container { background: var(--card-border); border-radius: 999px; height: 8px; overflow: hidden; margin-bottom: 1rem; }
+        .progress-bar { background: var(--primary-color); width: 0%; height: 100%; }
+        .btn-download { display: none; background: #10b981; color: white; padding: 0.5rem 1.25rem; border-radius: 0.5rem; text-decoration: none; font-weight: 700; }
+        .btn-download:hover { background: #059669; }
     </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ffmpeg/0.10.1/ffmpeg.min.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
@@ -340,82 +73,61 @@
 
     <main>
         <div class="tool-header">
-            <h1>Конвертер MP4 в MP3</h1>
-            <p>Витягуйте аудіо з відеофайлів за лічені секунди. Безпечно — без завантаження на сервер.</p>
+            <h1>Конвертер Відео в MP3</h1>
+            <p>Надійне вилучення звуку з будь-яких форматів файлів прямо у вашому браузері.</p>
         </div>
 
         <div class="dropzone-container">
-            
             <div class="settings-box">
-                <label for="quality">Якість вихідного звуку:</label>
+                <label for="quality">Якість звуку (Бітрейт):</label>
                 <select id="quality" class="quality-select">
-                    <option value="1">Низький бітрейт (Економічний розмір)</option>
-                    <option value="2" selected>Стандартний бітрейт (192 kbps)</option>
-                    <option value="3">Високий бітрейт (320 kbps / HD)</option>
+                    <option value="128k">128 kbps (Малий розмір)</option>
+                    <option value="192k" selected>192 kbps (Стандарт)</option>
+                    <option value="320k">320 kbps (Найвища якість)</option>
                 </select>
             </div>
 
             <div class="dropzone" id="dropzone">
-                <div class="dropzone-icon">🎵</div>
-                <h3>Оберіть або перетягніть відеофайл</h3>
-                <p>Обробка файлу почнеться автоматично та локально</p>
-                <button class="btn-browse">Вибрати файл</button>
-                <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*">
+                <div style="font-size: 3rem; margin-bottom: 1rem;">🎬</div>
+                <h3>Оберіть або перетягніть будь-яке відео</h3>
+                <p>Підтримуються MP4, MKV, AVI, MOV, WebM тощо</p>
+                <button class="btn-browse" style="margin-top: 1rem;">Вибрати файл</button>
+                <input type="file" id="fileInput" class="file-input">
             </div>
 
             <div class="process-box" id="processBox">
                 <div class="file-info">
-                    <span class="file-name" id="fileName">video_file.mp4</span>
+                    <span id="fileName" class="word-break: break-all;">video.mp4</span>
                     <span id="fileSize" style="color: var(--text-muted); font-size: 0.875rem;">0 MB</span>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" id="progressBar"></div>
                 </div>
                 <div style="display: flex; justify-content: space-between; align-items: center; min-height: 38px;">
-                    <span class="status-text" id="statusText">Очікування...</span>
+                    <span id="statusText" style="font-size: 0.875rem; color: var(--text-muted);">Завантаження кодеків...</span>
                     <a id="downloadBtn" class="btn-download">Завантажити MP3</a>
                 </div>
             </div>
         </div>
-
-        <section class="info-section">
-            <h2>Як конвертувати файли локально:</h2>
-            <ul class="info-steps">
-                <li>
-                    <strong>1. Налаштуйте якість</strong>
-                    <p>Виберіть бажаний режим стиснення аудіо перед початком обробки.</p>
-                </li>
-                <li>
-                    <strong>2. Додайте відео</strong>
-                    <p>Перетягніть файл у зону або натисніть кнопку "Вибрати".</p>
-                </li>
-                <li>
-                    <strong>3. Збережіть результат</strong>
-                    <p>За кілька секунд з'явиться кнопка для скачування повноцінного аудіофайлу.</p>
-                </li>
-            </ul>
-        </section>
     </main>
 
     <footer>
-        <p>&copy; 2026 conv.pp.ua. Локальна обробка даних без серверів.</p>
+        <p>&copy; 2026 conv.pp.ua. Безпечна локальна конвертація.</p>
     </footer>
 
     <script>
-        // ЛОГІКА ЗМІНИ ТЕМИ
+        // Тема
         const themeToggle = document.getElementById('themeToggle');
-        const savedTheme = localStorage.getItem('theme') || 
-            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+        const savedTheme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
         document.documentElement.setAttribute('data-theme', savedTheme);
-
         themeToggle.addEventListener('click', () => {
-            const currentTheme = document.documentElement.getAttribute('data-theme');
-            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
-            document.documentElement.setAttribute('data-theme', newTheme);
-            localStorage.setItem('theme', newTheme);
+            const currentObj = document.documentElement;
+            const nextTheme = currentObj.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
+            currentObj.setAttribute('data-theme', nextTheme);
+            localStorage.setItem('theme', nextTheme);
         });
 
-        // ІНТЕРФЕЙС ТА ДРОПЗОНА
+        // Інтерфейс
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('fileInput');
         const processBox = document.getElementById('processBox');
@@ -428,125 +140,90 @@
 
         let createdUrl = null;
 
-        ['dragenter', 'dragover'].forEach(eventName => {
-            dropzone.addEventListener(eventName, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); }, false);
+        // Ініціалізація FFmpeg з бібліотеки скрипта
+        const { createFFmpeg, fetchFile } = FFmpeg;
+        const ffmpeg = createFFmpeg({ log: false });
+
+        ['dragenter', 'dragover'].forEach(eName => {
+            dropzone.addEventListener(eName, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); });
         });
-        ['dragleave', 'drop'].forEach(eventName => {
-            dropzone.addEventListener(eventName, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); }, false);
+        ['dragleave', 'drop'].forEach(eName => {
+            dropzone.addEventListener(eName, (e) => { e.preventDefault(); dropzone.classList.remove('dragover'); });
         });
 
         dropzone.addEventListener('drop', (e) => {
-            const dt = e.dataTransfer;
-            const files = dt.files;
-            if (files.length) handleFile(files[0]);
+            const files = e.dataTransfer.files;
+            if (files.length) handleConversion(files[0]);
         });
 
         fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length) handleFile(e.target.files[0]);
+            if (e.target.files.length) handleConversion(e.target.files[0]);
         });
 
-        // ГОЛОВНА ФУНКЦІЯ ОБРОБКИ (ПОВНІСТЮ РОБОЧИЙ ДВИЖОК ДЕКОДУВАННЯ)
-        async function handleFile(file) {
-            if (createdUrl) { URL.revokeObjectURL(createdUrl); }
+        // ГОЛОВНИЙ НАДІЙНИЙ ПРОЦЕС КОНВЕРТАЦІЇ
+        async function handleConversion(file) {
+            if (createdUrl) URL.revokeObjectURL(createdUrl);
 
             processBox.style.display = 'block';
             fileNameEl.textContent = file.name;
             fileSizeEl.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
-            
             progressBar.style.width = '0%';
-            statusText.textContent = 'Зчитування файлу...';
             downloadBtn.style.display = 'none';
 
             try {
-                // Використовуємо Web Audio API для розкодування аудіо з відеофайлу прямо в пам'яті
-                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-                
-                // Прогрес читання файлу
-                progressBar.style.width = '20%';
-                statusText.textContent = 'Декодування аудіодоріжки (може зайняти час)...';
-                
-                const fileArrayBuffer = await file.arrayBuffer();
-                
-                progressBar.style.width = '50%';
-                
-                // Декодуємо бінарні дані відео у звуковий буфер
-                const audioBuffer = await audioCtx.decodeAudioData(fileArrayBuffer);
-                
-                progressBar.style.width = '80%';
-                statusText.textContent = 'Формування аудіофайлу...';
-
-                // Експортуємо отриманий звук у реальний файл контейнеру WAV/MP3
-                const wavBlob = audioBufferToWav(audioBuffer);
-                createdUrl = URL.createObjectURL(wavBlob);
-                
-                // Налаштування кнопки скачування
-                downloadBtn.href = createdUrl;
-                const originalName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-                downloadBtn.download = `${originalName}.mp3`;
-                
-                progressBar.style.width = '100%';
-                statusText.textContent = 'Готово до збереження!';
-                downloadBtn.style.display = 'inline-block';
-                
-                audioCtx.close();
-            } catch (error) {
-                console.error(error);
-                statusText.textContent = 'Помилка обробки. Можливо, файл пошкоджений або формат не підтримується браузером.';
-                progressBar.style.width = '0%';
-            }
-        }
-
-        // Чистий алгоритм збирання аудіо-буферу у фінарний медіа-файл
-        function audioBufferToWav(buffer) {
-            const numOfChan = buffer.numberOfChannels,
-                length = buffer.length * numOfChan * 2 + 44,
-                bufferArr = new ArrayBuffer(length),
-                view = new DataView(bufferArr),
-                channels = [], 
-                sampleRate = buffer.sampleRate;
-            
-            let i, sample, offset = 0, pos = 0;
-
-            // Записуємо заголовки медіа-файлу
-            setUint32(0x46464952);                         // "RIFF"
-            setUint32(length - 8);                         // розмір файлу
-            setUint32(0x45564157);                         // "WAVE"
-            setUint32(0x20746d66);                         // "fmt " chunk
-            setUint32(16);                                 // chunk length
-            setUint16(1);                                  // sample format (PCM)
-            setUint16(numOfChan);
-            setUint32(sampleRate);
-            setUint32(sampleRate * numOfChan * 2);         // byte rate
-            setUint16(numOfChan * 2);                      // block align
-            setUint16(16);                                 // bits per sample
-            setUint32(0x61746164);                         // "data" chunk
-            setUint32(length - pos - 4);                   // chunk length
-
-            for (i = 0; i < buffer.numberOfChannels; i++) {
-                channels.push(buffer.getChannelData(i));
-            }
-
-            // Запис звукової доріжки
-            while (pos < length) {
-                for (i = 0; i < numOfChan; i++) {
-                    sample = Math.max(-1, Math.min(1, channels[i][offset]));
-                    sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
-                    view.setInt16(pos, sample, true);
-                    pos += 2;
+                // 1. Перевіряємо, чи завантажено ядро кодека в браузер
+                if (!ffmpeg.isLoaded()) {
+                    statusText.textContent = 'Завантаження локального ядра кодека...';
+                    await ffmpeg.load();
                 }
-                offset++;
-            }
 
-            return new Blob([bufferArr], { type: 'audio/mp3' });
+                statusText.textContent = 'Підготовка файлу...';
+                const bitrate = qualitySelect.value;
+                const inputName = 'input_' + Date.now() + file.name.substring(file.name.lastIndexOf('.'));
+                const outputName = 'output_' + Date.now() + '.mp3';
 
-            function setUint16(data) {
-                view.setUint16(pos, data, true);
-                pos += 2;
-            }
+                // Передаємо файл у ізольовану пам'ять FFmpeg
+                ffmpeg.FS('writeFile', inputName, await fetchFile(file));
 
-            function setUint32(data) {
-                view.setUint32(pos, data, false);
-                pos += 4;
+                statusText.textContent = 'Конвертація аудіо (обробка у браузері)...';
+                progressBar.style.width = '40%';
+
+                // Відстежуємо прогрес через логи FFmpeg
+                ffmpeg.setProgress(({ ratio }) => {
+                    if(ratio >= 0 && ratio <= 1) {
+                        progressBar.style.width = Math.round(ratio * 100) + '%';
+                        statusText.textContent = `Обробка: ${Math.round(ratio * 100)}%`;
+                    }
+                });
+
+                // 2. Запуск повноцінного перекодування абсолютно будь-якого кодека в чистий MP3
+                await ffmpeg.run('-i', inputName, '-vn', '-acodec', 'libmp3lame', '-b:a', bitrate, outputName);
+
+                statusText.textContent = 'Збирання результату...';
+                progressBar.style.width = '90%';
+
+                // 3. Забираємо готовий чистий MP3-файл
+                const data = ffmpeg.FS('readFile', outputName);
+                const mp3Blob = new Blob([data.buffer], { type: 'audio/mp3' });
+                
+                createdUrl = URL.createObjectURL(mp3Blob);
+                downloadBtn.href = createdUrl;
+                
+                const rawName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                downloadBtn.download = `${rawName}.mp3`;
+
+                // Очищаємо віртуальну пам'ять браузера, щоб не було перевантаження
+                ffmpeg.FS('unlink', inputName);
+                ffmpeg.FS('unlink', outputName);
+
+                progressBar.style.width = '100%';
+                statusText.textContent = 'Конвертацію успішно завершено!';
+                downloadBtn.style.display = 'inline-block';
+
+            } catch (err) {
+                console.error(err);
+                statusText.textContent = 'Помилка кодека. Спробуйте інший файл або перезапустіть сторінку.';
+                progressBar.style.width = '0%';
             }
         }
     </script>
