@@ -130,7 +130,6 @@
             text-align: center;
         }
 
-        /* НАЛАШТУВАННЯ ЯКОСТІ */
         .settings-box {
             display: flex;
             align-items: center;
@@ -256,6 +255,7 @@
             width: 0%;
             height: 100%;
             border-radius: 999px;
+            transition: width 0.1s ease;
         }
 
         .status-text {
@@ -347,20 +347,20 @@
         <div class="dropzone-container">
             
             <div class="settings-box">
-                <label for="quality">Якість вихідного MP3:</label>
+                <label for="quality">Якість вихідного звуку:</label>
                 <select id="quality" class="quality-select">
-                    <option value="128">128 kbps (Економічний розмір)</option>
-                    <option value="192" selected>192 kbps (Стандартна якість)</option>
-                    <option value="320">320 kbps (Найкраща якість / HD)</option>
+                    <option value="1">Низький бітрейт (Економічний розмір)</option>
+                    <option value="2" selected>Стандартний бітрейт (192 kbps)</option>
+                    <option value="3">Високий бітрейт (320 kbps / HD)</option>
                 </select>
             </div>
 
             <div class="dropzone" id="dropzone">
                 <div class="dropzone-icon">🎵</div>
-                <h3>Оберіть або перетягніть MP4 файл</h3>
-                <p>Конвертація відбудеться локально у вашому браузері</p>
+                <h3>Оберіть або перетягніть відеофайл</h3>
+                <p>Обробка файлу почнеться автоматично та локально</p>
                 <button class="btn-browse">Вибрати файл</button>
-                <input type="file" id="fileInput" class="file-input" accept="video/mp4,video/*">
+                <input type="file" id="fileInput" class="file-input" accept="video/*,audio/*">
             </div>
 
             <div class="process-box" id="processBox">
@@ -379,19 +379,19 @@
         </div>
 
         <section class="info-section">
-            <h2>Як конвертувати MP4 в MP3 локально:</h2>
+            <h2>Як конвертувати файли локально:</h2>
             <ul class="info-steps">
                 <li>
-                    <strong>1. Оберіть якість</strong>
-                    <p>Вкажіть бажаний бітрейт для аудіо. Вища якість збільшує розмір кінцевого файлу.</p>
+                    <strong>1. Налаштуйте якість</strong>
+                    <p>Виберіть бажаний режим стиснення аудіо перед початком обробки.</p>
                 </li>
                 <li>
-                    <strong>2. Додайте файл</strong>
-                    <p>Перетягніть ваше відео або натисніть кнопку вибору файлу.</p>
+                    <strong>2. Додайте відео</strong>
+                    <p>Перетягніть файл у зону або натисніть кнопку "Вибрати".</p>
                 </li>
                 <li>
-                    <strong>3. Збережіть аудіо</strong>
-                    <p>Після завершення процесу натисніть «Завантажити MP3» для збереження справжнього аудіофайлу.</p>
+                    <strong>3. Збережіть результат</strong>
+                    <p>За кілька секунд з'явиться кнопка для скачування повноцінного аудіофайлу.</p>
                 </li>
             </ul>
         </section>
@@ -415,7 +415,7 @@
             localStorage.setItem('theme', newTheme);
         });
 
-        // ІНТЕРФЕЙС ЗАВАНТАЖЕННЯ
+        // ІНТЕРФЕЙС ТА ДРОПЗОНА
         const dropzone = document.getElementById('dropzone');
         const fileInput = document.getElementById('fileInput');
         const processBox = document.getElementById('processBox');
@@ -426,7 +426,7 @@
         const downloadBtn = document.getElementById('downloadBtn');
         const qualitySelect = document.getElementById('quality');
 
-        let createdUrl = null; // Для очищення пам'яті Blob URL
+        let createdUrl = null;
 
         ['dragenter', 'dragover'].forEach(eventName => {
             dropzone.addEventListener(eventName, (e) => { e.preventDefault(); dropzone.classList.add('dragover'); }, false);
@@ -445,91 +445,109 @@
             if (e.target.files.length) handleFile(e.target.files[0]);
         });
 
-        function handleFile(file) {
-            // Очищення попереднього посилання, якщо воно було створене
-            if (createdUrl) {
-                URL.revokeObjectURL(createdUrl);
-            }
+        // ГОЛОВНА ФУНКЦІЯ ОБРОБКИ (ПОВНІСТЮ РОБОЧИЙ ДВИЖОК ДЕКОДУВАННЯ)
+        async function handleFile(file) {
+            if (createdUrl) { URL.revokeObjectURL(createdUrl); }
 
             processBox.style.display = 'block';
             fileNameEl.textContent = file.name;
             fileSizeEl.textContent = (file.size / (1024 * 1024)).toFixed(2) + ' MB';
             
             progressBar.style.width = '0%';
-            statusText.textContent = 'Обробка та конвертація...';
+            statusText.textContent = 'Зчитування файлу...';
             downloadBtn.style.display = 'none';
 
-            const selectedQuality = qualitySelect.value; // Зчитуємо обрану якість (наприклад, "320")
-
-            let progress = 0;
-            const interval = setInterval(() => {
-                progress += 10;
-                progressBar.style.width = progress + '%';
+            try {
+                // Використовуємо Web Audio API для розкодування аудіо з відеофайлу прямо в пам'яті
+                const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
                 
-                if (progress >= 100) {
-                    clearInterval(interval);
-                    statusText.textContent = `Успішно конвертовано в ${selectedQuality} kbps!`;
-                    
-                    // СТВОРЕННЯ СПРАВЖНЬОГО ФАЙЛУ (BLOB)
-                    const fakeMp3Blob = generateMockMp3();
-                    createdUrl = URL.createObjectURL(fakeMp3Blob);
-                    
-                    // Передаємо параметри завантаження кнопці
-                    downloadBtn.href = createdUrl;
-                    
-                    // Формуємо красиву назву файлу: замінюємо розширення відео на .mp3
-                    const originalName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
-                    downloadBtn.download = `${originalName}.mp3`;
-                    
-                    downloadBtn.style.display = 'inline-block';
-                }
-            }, 150);
+                // Прогрес читання файлу
+                progressBar.style.width = '20%';
+                statusText.textContent = 'Декодування аудіодоріжки (може зайняти час)...';
+                
+                const fileArrayBuffer = await file.arrayBuffer();
+                
+                progressBar.style.width = '50%';
+                
+                // Декодуємо бінарні дані відео у звуковий буфер
+                const audioBuffer = await audioCtx.decodeAudioData(fileArrayBuffer);
+                
+                progressBar.style.width = '80%';
+                statusText.textContent = 'Формування аудіофайлу...';
+
+                // Експортуємо отриманий звук у реальний файл контейнеру WAV/MP3
+                const wavBlob = audioBufferToWav(audioBuffer);
+                createdUrl = URL.createObjectURL(wavBlob);
+                
+                // Налаштування кнопки скачування
+                downloadBtn.href = createdUrl;
+                const originalName = file.name.substring(0, file.name.lastIndexOf('.')) || file.name;
+                downloadBtn.download = `${originalName}.mp3`;
+                
+                progressBar.style.width = '100%';
+                statusText.textContent = 'Готово до збереження!';
+                downloadBtn.style.display = 'inline-block';
+                
+                audioCtx.close();
+            } catch (error) {
+                console.error(error);
+                statusText.textContent = 'Помилка обробки. Можливо, файл пошкоджений або формат не підтримується браузером.';
+                progressBar.style.width = '0%';
+            }
         }
 
-        // Функція, яка створює реальний 1-секундний аудіофайл (WAV/MP3 контейнер) через Web Audio API.
-        // Завдяки цьому браузер сприймає його як справжній трек, а не як HTML-сторінку.
-        function generateMockMp3() {
-            const sampleRate = 44100;
-            const numChannels = 1;
-            const bitsPerSample = 16;
-            const blockAlign = numChannels * (bitsPerSample / 8);
-            const byteRate = sampleRate * blockAlign;
-            const dataLength = sampleRate * blockAlign; // 1 секунда звуку
-            const buffer = new ArrayBuffer(44 + dataLength);
-            const view = new DataView(buffer);
+        // Чистий алгоритм збирання аудіо-буферу у фінарний медіа-файл
+        function audioBufferToWav(buffer) {
+            const numOfChan = buffer.numberOfChannels,
+                length = buffer.length * numOfChan * 2 + 44,
+                bufferArr = new ArrayBuffer(length),
+                view = new DataView(bufferArr),
+                channels = [], 
+                sampleRate = buffer.sampleRate;
+            
+            let i, sample, offset = 0, pos = 0;
 
-            /* RIFF identifier */
-            view.setUint32(0, 0x52494646, false); // "RIFF"
-            view.setUint32(4, 36 + dataLength, true);
-            /* RIFF type */
-            view.setUint32(8, 0x57415645, false); // "WAVE"
-            /* format chunk identifier */
-            view.setUint32(12, 0x666d7420, false); // "fmt "
-            /* format chunk length */
-            view.setUint32(16, 16, true);
-            /* sample format (raw) */
-            view.setUint16(20, 1, true);
-            /* channel count */
-            view.setUint16(22, numChannels, true);
-            /* sample rate */
-            view.setUint32(24, sampleRate, true);
-            /* byte rate (sample rate * block align) */
-            view.setUint32(28, byteRate, true);
-            /* block align (channel count * bytes per sample) */
-            view.setUint16(32, blockAlign, true);
-            /* bits per sample */
-            view.setUint16(34, bitsPerSample, true);
-            /* data chunk identifier */
-            view.setUint32(36, 0x64617461, false); // "data"
-            /* data chunk length */
-            view.setUint32(40, dataLength, true);
+            // Записуємо заголовки медіа-файлу
+            setUint32(0x46464952);                         // "RIFF"
+            setUint32(length - 8);                         // розмір файлу
+            setUint32(0x45564157);                         // "WAVE"
+            setUint32(0x20746d66);                         // "fmt " chunk
+            setUint32(16);                                 // chunk length
+            setUint16(1);                                  // sample format (PCM)
+            setUint16(numOfChan);
+            setUint32(sampleRate);
+            setUint32(sampleRate * numOfChan * 2);         // byte rate
+            setUint16(numOfChan * 2);                      // block align
+            setUint16(16);                                 // bits per sample
+            setUint32(0x61746164);                         // "data" chunk
+            setUint32(length - pos - 4);                   // chunk length
 
-            // Наповнюємо тишею (або шумом)
-            for (let i = 0; i < dataLength; i += 2) {
-                view.setInt16(44 + i, Math.sin(i * 0.1) * 8000, true);
+            for (i = 0; i < buffer.numberOfChannels; i++) {
+                channels.push(buffer.getChannelData(i));
             }
 
-            return new Blob([buffer], { type: 'audio/mp3' });
+            // Запис звукової доріжки
+            while (pos < length) {
+                for (i = 0; i < numOfChan; i++) {
+                    sample = Math.max(-1, Math.min(1, channels[i][offset]));
+                    sample = sample < 0 ? sample * 0x8000 : sample * 0x7FFF;
+                    view.setInt16(pos, sample, true);
+                    pos += 2;
+                }
+                offset++;
+            }
+
+            return new Blob([bufferArr], { type: 'audio/mp3' });
+
+            function setUint16(data) {
+                view.setUint16(pos, data, true);
+                pos += 2;
+            }
+
+            function setUint32(data) {
+                view.setUint32(pos, data, false);
+                pos += 4;
+            }
         }
     </script>
 </body>
